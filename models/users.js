@@ -59,7 +59,6 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       table: function(models) {
         return models.Pred.findAll({
-          raw: true,
           attributes: ['id', 'prediction', 'joker', 'points'],
           include: [{
             model: models.User,
@@ -71,11 +70,11 @@ module.exports = function(sequelize, DataTypes) {
         }).then(function(preds) {
           var table = {};
           for (var x = 0; x < preds.length; x++) {
-            var name = preds[x]['user.username'];
+            var name = preds[x].user.username;
             if (!(name in table)) {
               table[name] = {
                 name: name,
-                id: preds[x]['user.id'],
+                id: preds[x].user.id,
                 points: 0,
                 preds: 0,
                 cs: 0,
@@ -86,8 +85,8 @@ module.exports = function(sequelize, DataTypes) {
             // only recalc a prediction if pred.points is null, and there's a result
             // otherwise count the points
 
-            table[name].points += preds[x]['points'];
-            switch (preds[x]['points']) {
+            table[name].points += preds[x].points;
+            switch (preds[x].points) {
               case 5:
               case 10:
                 table[name].cs++;
@@ -114,7 +113,6 @@ module.exports = function(sequelize, DataTypes) {
       predictions: function(models, uid) {
         return models.Pred.findAll({
           where: { user_id: uid },
-          raw: true,
           attributes: ['id', 'prediction', 'joker', 'points'],
           include: [{
             model: models.Match,
@@ -130,8 +128,8 @@ module.exports = function(sequelize, DataTypes) {
         }).then(function(preds) {
           
           for (var x = 0; x < preds.length; x++) {
-            var then = moment(preds[x]['match.date']).startOf('day');
-            preds[x].expired = ((moment().isAfter(then)) || (preds[x]['match.result'] !== null));
+            var then = moment(preds[x].match.date).startOf('day');
+            preds[x].expired = ((moment().isAfter(then)) || (preds[x].match.result !== null));
           }
           return true;
         })
