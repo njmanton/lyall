@@ -3,6 +3,7 @@
 var models  = require('../models'),
     Promise = require('bluebird'),
     _       = require('lodash'),
+    chalk   = require('chalk'),
     folder  = 'venues';
 
 module.exports = {
@@ -26,7 +27,6 @@ module.exports = {
     });
     var matches = models.Match.findAll({
       where: { venue_id: id },
-      raw: true,
       attributes: [
         'id', 
         'result', 
@@ -67,19 +67,19 @@ module.exports = {
               stage: m.stage,
               group: m.group,
               teama: {
-                id: m['TeamA.id'],
-                name: m['TeamA.name'] || placeholders[0],
-                flag: m['TeamA.sname']
+                id: (m.TeamA) ? m.TeamA.id : 0,
+                name: (m.TeamA) ? m.TeamA.name : placeholders[0],
+                flag: (m.TeamA) ? m.TeamA.sname : ''
               },
               teamb: {
-                id: m['TeamB.id'],
-                name: m['TeamB.name'] || placeholders[1],
-                flag: m['TeamB.sname']
+                id: (m.TeamB) ? m.TeamB.id : 0,
+                name: (m.TeamB) ? m.TeamB.name : placeholders[1],
+                flag: (m.TeamB) ? m.TeamB.sname : ''
               },
               venue: {
-                id: m['venue.id'],
-                stadium: m['venue.stadium'],
-                city: m['venue.city']
+                id: m.venue.id,
+                stadium: m.venue.stadium,
+                city: m.venue.city
               }
             })
           }

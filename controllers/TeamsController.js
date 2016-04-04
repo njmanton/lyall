@@ -20,7 +20,7 @@ module.exports = {
     var team = models.Team.findById(id);
     var matches = models.Match.findAll({
       where: { $or: [{ teama_id: id }, { teamb_id: id }] },
-      raw: true,
+      //raw: true,
       attributes: [
         'id', 
         'result', 
@@ -50,7 +50,7 @@ module.exports = {
           for (var x = 0; x < matches.length; x++) {
             var m = matches[x],
                 result = null,
-                home = (m['TeamA.id'] == id);
+                home = (m.TeamA.id == id);
 
             if (m.result) {
               result = (home) ? m.result : m.result.split('-').reverse().join('-');
@@ -62,15 +62,15 @@ module.exports = {
               group: m.group,
               stage: m.stage,
               opponent: {
-                id: (home) ? m['TeamB.id'] : m['TeamA.id'],
-                name: (home) ? m['TeamB.name'] : m['TeamA.name'],
-                flag: (home) ? m['TeamB.sname'] : m['TeamA.sname']
+                id: (home) ? m.TeamB.id : m.TeamA.id,
+                name: (home) ? m.TeamB.name : m.TeamA.name,
+                flag: (home) ? m.TeamB.sname : m.TeamA.sname
               },
               result: result,
               venue: {
-                id: m['venue.id'],
-                stadium: m['venue.stadium'],
-                city: m['venue.city']
+                id: m.venue.id,
+                stadium: m.venue.stadium,
+                city: m.venue.city
               }     
             })
           }
