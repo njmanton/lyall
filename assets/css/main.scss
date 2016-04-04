@@ -1,0 +1,13 @@
+@import url(vendor/normalize.min.css);
+@import url(flags32.css);
+
+header {
+  background-color: #222;
+  a {
+    color: #eee;
+
+  }
+  a:visited {
+    color: #ddf;
+  }
+}

@@ -1,0 +1,45 @@
+<section>
+  
+  {{#unless venue }}
+  <p>Venue Not Found!</p>
+  {{ else }}
+  <h2>{{ venue.stadium }}</h2>
+  <p>City: {{ venue.city }}</p>
+  <p>Capacity: {{ venue.capacity }}</p>
+  
+  <table>
+    <caption>Matches</caption>
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>date</th>
+        <th>stage</th>
+        <th>&nbsp;</th>
+        <th>Result</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each matches }}
+      <tr>
+        <td><a href="/matches/{{ id }}">{{ id }}</a></td>
+        <td>{{ date }}</td>
+        <td>{{ stage }}</td>
+        <td>
+          {{#if teama.id }}<a href="/teams/{{ teama.id }}">{{/if}}
+          {{ teama.name }}
+          {{#if teama.id}}</a>{{/if}}
+        </td>
+        <td>{{ result }}</td>
+        <td>
+          {{#if teamb.id }}<a href="/teams/{{ teamb.id }}">{{/if}}
+          {{ teamb.name }}
+          {{#if teamb.id}}</a>{{/if}}
+        </td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+  {{/unless }}
+  
+</section>

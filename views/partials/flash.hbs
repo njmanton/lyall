@@ -1,0 +1,21 @@
+<div class="flash success">
+  {{#each flash_success }}{{ this }}{{/each }}
+</div>
+<div class="flash error">
+  {{#each flash_error }}{{ this }}{{/each }}
+</div>
+<div class="flash info">
+  {{#each flash_info }}{{ this }}{{/each }}
+</div>
+
+<style>
+  .success {
+    background-color: #6f6;
+  }
+  .error {
+    background-color: #f33;
+  }
+  .info {
+    background-color: #66f;    
+  }
+</style>

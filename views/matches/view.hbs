@@ -1,0 +1,40 @@
+<section>
+  
+  <h2>Match {{ match.id }}</h2>
+  <table>
+    <tbody>
+      <tr>
+        <td>{{ match.fdate }}</td>
+        <td><a href="/venues/{{ match.[venue.id] }}">{{ match.[venue.stadium] }}</a></td>
+        <td><a href="/teams/{{ match.[TeamA.id] }}">{{ match.[TeamA.name] }}</a></td>
+        <td>{{ match.result }}</td>
+        <td><a href="/teams/{{ match.[TeamB.id] }}">{{ match.[TeamB.name] }}</a></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <table>
+    <caption>Predictions</caption>
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Prediction</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each preds }}
+      <tr>
+        <td><a href="/users/{{ [user.id] }}">{{ [user.username] }}</a></td>
+        <td>
+        {{#if ../visible }}
+          {{ prediction }}
+        {{ else }}
+          ?-?
+        {{/if }}
+        </td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+  
+</section>

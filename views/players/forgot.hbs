@@ -1,0 +1,16 @@
+<section>
+  
+  <h2>Oops</h2>
+  <p>If you've forgotten your password, then please fill in your username and email address you used to register, and we'll send you a reset code by email.</p>
+  
+  <form action="/users/forgot" method="post" id="forgotPassword" data-abide>
+    <label for="uid">Username:
+      <input type="text" required autocomplete="off" id="forgotuid" placeholder="username" name="username" />
+    </label>
+    <div id="erroruid" class=""></div>
+    <label for="forgotemail">Email address:
+      <input type="email" required autocomplete="off" id="forgotemail" placeholder="bob@example.com" name="email" />
+    </label>
+    <input type="submit" class="" id="forgotsubmit" value="Find Me" />
+  </form>
+</section>

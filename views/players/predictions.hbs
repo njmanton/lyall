@@ -1,0 +1,29 @@
+<section>
+  
+  <h2>Predictions</h2>
+  
+  <p>Hi, {{ user.username }}</p>
+  
+  <table>
+    <caption>Predictions</caption>
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>Prediction</th>
+        <th>Result</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each preds }}
+      <tr>
+        <td><a href="/teams/{{ [match.TeamA.id] }}">{{ [match.TeamA.name] }}</a></td>
+        <td>{{ prediction }}</td>
+        <td>{{ [match.result] }}</td>
+        <td><a href="/teams/{{ [match.TeamB.id] }}">{{ [match.TeamB.name] }}</a></td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+  
+</section>

@@ -1,0 +1,32 @@
+<table class="f32">
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>Group</th>
+      <th>Ranking</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each teams}}
+    <tr>
+      <td class="flag {{ sname }}"><a href="/teams/{{ id }}">{{ name }}</a></td>
+      <td>{{ group }}</td>
+      <td>{{ ranking }}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+  
+</table>
+
+<style>
+  .flag > a {
+    padding-left: 3em;
+    min-width: 20em;
+    
+  }
+
+  .flag {
+    min-width: 20em;
+    padding: 5px 0;
+  }
+</style>

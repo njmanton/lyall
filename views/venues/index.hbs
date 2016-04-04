@@ -1,0 +1,19 @@
+<table>
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>City</th>
+      <th>Capacity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each venues}}
+    <tr>
+      <td><a href="/venues/{{ id }}">{{ stadium }}</a></td>
+      <td>{{ city }}</td>
+      <td>{{ capacity }}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+  
+</table>

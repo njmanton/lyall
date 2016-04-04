@@ -1,0 +1,23 @@
+<section>
+  
+  <h2>User Leagues</h2>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>League</th>
+        <th>Organiser</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each data }}
+      <tr>
+        <td><a href="/leagues/{{ id }}">{{ name }}</a></td>
+        <td><a href="/users/{{ [user.id] }}">{{ [user.username] }}</a></td>
+        <td>{{ public }}</td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</section>

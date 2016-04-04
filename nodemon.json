@@ -1,0 +1,10 @@
+{
+  "ignore": [
+    "assets/js/*",
+    "config/*",
+    "nodemon.json"
+  ],
+  "execMap": {
+    "js": "node"
+  }
+}

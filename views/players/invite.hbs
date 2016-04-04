@@ -1,0 +1,25 @@
+<section>
+  
+  <h2>Invite someone</h2>
+  
+  <p>To invite a friend to take part in the game, add their email address in the form below. You can also, optionally, edit the default message that will form the body of the email.</p>
+  
+  <p>Once you've clicked 'send', the recipient will receive an email inviting them to visit the site and verify their details to create an account.</p>
+  
+  <form action="/users/invite" method="post">
+    <fieldset>
+      <label for="email">Email address:
+        <input name="email" type="email" id="email" required />
+      </label>
+      <label for="message">Message body:
+        <textarea name="message" id="message" cols="50" rows="6" required></textarea>
+      </label>
+      <label for="copy">Click to receive a copy of the email:
+        <input type="checkbox" name="copy" value="1" id="copy" />
+      </label>
+    </fieldset>
+  <input type="submit" class="tiny button" value="Send" />
+    
+  </form>
+  
+</section>

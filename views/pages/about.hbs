@@ -1,0 +1,17 @@
+<section>
+  
+  <h2>About</h2>
+  <p>Some stuff here</p>
+
+  <a href="/leagues/2/join">join</a>
+  
+</section>
+
+<script>
+  $(document).ready(function() {
+    $.get('/leagues/1/pending')
+      .done(function(data) {
+        console.log(data);
+      })
+  })
+</script>

@@ -1,0 +1,28 @@
+<section>
+  
+  {{#each matches }}
+  <table>
+  <caption>Group {{ @key }}</caption>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Venue</th>
+      <th>&nbsp;</th>
+      <th>Score</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each this }}
+    <tr>
+      <td>{{ this.date }}</td>
+      <td>{{ this.[venue.stadium] }}</td>
+      <td>{{ this.[TeamA.name] }}</td>
+      <td>{{ result }}</td>
+      <td>{{ this.[TeamB.name] }}</td>
+    </tr>
+    {{/each }}
+  </tbody>
+</table>
+  {{/each }}
+</section>

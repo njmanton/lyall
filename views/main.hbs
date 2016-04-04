@@ -1,0 +1,15 @@
+<section>
+  <h2>Welcome</h2>
+  <p>Welcome to Euro 2016 Goalmine</p>
+  <a href="/users/register">Register</a>
+</section>
+
+<script>
+  $(document).ready(function() {
+    $.get({
+      url: '/teams/'
+    }).done(function(res) {
+      console.log(res);
+    })
+  })
+</script>

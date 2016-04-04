@@ -1,0 +1,35 @@
+<section>
+  
+  <h2>Confirm an account</h2>
+  
+  <p>Hi, thanks for clicking on the invite provided by <a href="/users/{{ data.[Referrer.id] }}">{{ data.[Referrer.username] }}</a>, to create an account for Euro 2016 Goalmine.</p>
+  
+  <p>To finish creating your account, just fill in the fields below. Your email address will only be used to send game updates. It will never be passed on to anyone else, and is not visible to any other user.</p>
+  
+  <form action="/users/confirm" method="post">
+    <fieldset>
+      
+      <label for="">Choose a username: *
+        <input type="text" name="username" required id="username" />
+      </label>
+      <div role="alert" id="uid_err"></div>
+      
+      <label for="">Email address: *
+        <input type="email" name="email" id="email" required value="{{ data.email }}" />
+      </label>
+      
+      <label for="">Choose a password: *
+        <input type="password" name="password" required id="password" />
+      </label>
+      <div role="alert" id="pwd_err"></div>
+      
+      <label for="">Repeat password: *
+        <input type="password" name="repeat" required id="repeat" />
+      </label>
+      <div role="alert" id="rpt_err"></div>
+      
+    </fieldset>
+    <input type="hidden" name="code" id="code" value="{{ data.username }}" />
+    <input type="submit" class="tiny button" value="Confirm" />    
+  </form>
+</section>

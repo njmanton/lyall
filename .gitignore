@@ -1,0 +1,9 @@
+node_modules
+test
+assets/img
+assets/js/vendor
+assets/css/vendor
+config/db_config.js
+config/mail_config.js
+*.sublime*
+TODO.md

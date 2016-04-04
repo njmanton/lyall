@@ -1,0 +1,36 @@
+<section>
+  
+  {{#unless team }}
+  <p>Team Not Found!</p>
+  {{ else }}
+  <h2>{{ team.name }}</h2>
+  <p>Group: {{ team.group }}</p>
+  <img style="height: 6em;" src="/img/flags/{{ team.sname }}.svg" alt="{{ team.name }} Flag" />
+  {{#each matches }}
+  <table>
+    <caption>Group {{ @key }}</caption>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Venue</th>
+        <th>Opponent</th>
+        <th>Score</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each this }}
+      <tr>
+        <td>{{ this.date }}</td>
+        <td><a href="/venues/{{ this.venue.id }}">{{ this.venue.stadium }}</a></td>
+        <td class="flag {{ this.opponent.flag }}"><a href="/teams/{{ this.opponent.id }}">{{ this.opponent.name }}</a></td>
+        <td>{{ this.result }}</td>
+        <td><a href="/matches/{{ this.id }}">view</a></td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+  {{/each }}
+  {{/unless }}
+  
+</section>
