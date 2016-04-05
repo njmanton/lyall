@@ -11,7 +11,7 @@ var mail = {
 
     // convert template and context into message
     var message = '';
-    var template = fs.readFileSync(__dirname + '/templates/' + template_file, 'utf8');
+    var template = fs.readFileSync(__dirname + '/templates/' + template_file + '.hbs', 'utf8');
     message = hbs.compile(template);
 
     var data = {
