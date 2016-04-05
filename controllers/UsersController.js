@@ -197,7 +197,7 @@ module.exports = {
         });
       }
       req.flash('info', 'If those details were found, you will shortly receive an email explaining how to reset your password');
-
+      res.redirect('/');
     })
     
   }
