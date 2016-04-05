@@ -74,12 +74,13 @@ module.exports = {
   }],
 
   post_create: [utils.isAuthenticated, function(req, res) {
+    // post format { name: <league name>, description: <description>, public: <public> }
     models.League.create({
 
       name: req.body.name,
       description: req.body.description,
       public: req.body.public || 0,
-      organiser: req.user.id || 0
+      organiser: (req.user) ? req.user.id : 1
 
     }).then(function(league) {
 
@@ -148,6 +149,7 @@ module.exports = {
 
   post_pending: [utils.isAdmin, utils.isAjax, function(req, res) {
     // handle a post request - result of accepting/rejecting a user league
+    // post format { organiser: <organiser email>, league: <league id>, decision: <A|R> }
     let decision = req.body.decision;
     let user = models.User.findOne({
       where: { id: req.body.organiser },
@@ -160,25 +162,23 @@ module.exports = {
       process = models.League.update({
         pending: 0
       }, {
-        where: { 'id': req.body.league }
+        where: [{ 'id': req.body.league }, { pending: 1 }]
       });
 
     } else if (decision == 'R') {
 
       process = models.League.destroy({
-        where: { id: req.body.league }
+        where: [{ id: req.body.league }, { pending: 1 }]
       })
 
-    } else {
-      res.send('Couldn\'t Process');
     }
     models.sequelize.Promise.join(
       user,
       process,
       function(user, process) {
         // send some emails
-        req.flash('info', 'Processed');
-        res.redirect('/leagues');
+        // process returns number of affected rows
+        res.send(process > 0);
       }
     )
     
