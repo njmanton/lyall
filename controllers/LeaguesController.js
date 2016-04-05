@@ -104,7 +104,7 @@ module.exports = {
       models.League_User.create({
         user_id: req.user.id,
         league_id: id,
-        confirmed: league.public
+        pending: !league.public
       }).then(function() {
 
         if (league && league.public == 1) {
@@ -149,41 +149,38 @@ module.exports = {
 
   post_pending: [utils.isAdmin, utils.isAjax, function(req, res) {
     // handle decision on accepting/rejecting a user league
-    // post format { uid: <organiser id>, league: <league id>, decision: <A|R> }
+    // post format { lid: <league id>, decision: <A|R> }
     let decision = req.body.decision;
-    let user = models.User.findById(req.body.uid);
-    let league = models.League.findById(req.body.league);
-    var process, template;
-    if (decision == 'A') {
-      template = 'league_create_accept';
-      process = models.League.update({
-        pending: 0
-      }, {
-        where: [{ 'id': req.body.league }, { pending: 1 }]
-      });
-    } else if (decision == 'R') {
-      template = 'league_create_reject';
-      process = models.League.destroy({
-        where: [{ id: req.body.league }, { pending: 1 }]
-      })
-    }
-    models.sequelize.Promise.join(
-      user,
-      league,
-      process,
-      function(user, league, process) {
-        // send some emails
-        let cc        = false,
-            subject   = 'Goalmine User League Request',
-            context   = {
-              user: user.username,
-              league: league.name
+    models.League.findOne({
+      where: [{ pending: 1 }, { id: req.body.lid }],
+      include: {
+        model: models.User,
+        attributes: ['id', 'username']
+      }
+    }).then(function(league) {
+      if (league) {
+        let template = '';
+        if (decision == 'A') {
+          template = 'league_create_accept';
+          league.update({ pending: 0 });
+        } else if (decision == 'R') {
+          template = 'league_create_reject';
+          league.destroy();
+        }
+        let subject = 'Goalmine User League Request',
+            context = {
+              user: league.user.username,
+              league: league.name,
+              id: league.id
             };
         //mail.send(user.email, cc, subject, template, context, function(mail_result) {
         // process returns number of affected rows
-        res.send(process > 0);
+        res.send(true);        
+      } else {
+        res.sendStatus(404);
       }
-    )
+
+    });
     
   }],
 
@@ -196,7 +193,7 @@ module.exports = {
       },
     });
     var users = models.League_User.findAll({
-      where: [{ confirmed: 0 }, { league_id: id }],
+      where: [{ pending: 1 }, { league_id: id }],
       attributes: ['id'],
       include: {
         model: models.User,
@@ -216,8 +213,46 @@ module.exports = {
     );
   }],
 
-  post_id_pending: function(req, res) {
+  post_id_pending: [utils.isAuthenticated, utils.isAjax, function(req, res, id) {
     // handle accepting/rejecting a user in a user league
-  }
+    // post format { uid: <invitee id>, decision: <A|R> }
+    let decision = req.body.decision;
+    models.League_User.findOne({
+      attributes: ['id', 'league_id'],
+      where: [{ user_id: req.body.uid }, { league_id: id }, { pending: 1 }],
+      include: [{
+        model: models.League,
+        attributes: ['id', 'name']
+      }, {
+        model: models.User,
+        attributes: ['username']
+      }]
+    }).then(function(lu) {
+      if (lu) {
+        let template;
+        if (decision == 'A') {
+          template = 'league_join_accept';
+          lu.update({ pending: 0 });
+        } else if (decision == 'R') {
+          template = 'league_join_reject';
+          lu.destroy();
+        }
+        let subject = 'Goalmine User League Request',
+            context = {
+              user: lu.user.username,
+              league: lu.league.name,
+              id: lu.league_id
+            };
+        //mail.send(user.email, cc, subject, template, context, function(mail_result) {
+        // process returns number of affected rows
+        res.send(true);
+      } else {
+        res.sendStatus(404);
+      }
+    })
+    
+
+    
+  }]
 
 }
