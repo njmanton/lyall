@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
-    confirmed: {
+    pending: {
       type: DataTypes.INTEGER(11),
       allowNull: true
     }
