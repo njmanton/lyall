@@ -53,7 +53,6 @@ module.exports = {
         } else {
           res.sendStatus(404);
         }
-
       }
     );
   },
@@ -83,20 +82,15 @@ module.exports = {
       organiser: (req.user) ? req.user.id : 1
 
     }).then(function(league) {
-
       if (league) {
         req.flash('info', 'Thanks, your request has been submitted');
       } else {
         req.flash('error', 'Sorry, we were unable to submit that request');
       }
       res.redirect('/leagues');
-
     }).catch(function(e) {
-
       console.log(chalk.bgRed('post_create_err'), e);
-
     })
-
   }],
 
   get_id_join: [utils.isAuthenticated, function(req, res, id) {
@@ -128,7 +122,6 @@ module.exports = {
     }).catch(function(e) {
       res.send(e);
     })
-
   }],
 
   get_pending: [utils.isAjax, utils.isAdmin, function(req, res) {
@@ -159,9 +152,14 @@ module.exports = {
       }
     }).then(function(league) {
       if (league) {
-        let template = '';
+        let template;
         if (decision == 'A') {
           template = 'league_create_accept';
+          models.League_User.create({
+            user_id: league.user.id,
+            league_id: league.id,
+            pending: 0
+          });
           league.update({ pending: 0 });
         } else if (decision == 'R') {
           template = 'league_create_reject';
@@ -179,9 +177,7 @@ module.exports = {
       } else {
         res.sendStatus(404);
       }
-
     });
-    
   }],
 
   get_id_pending: [utils.isAjax, function(req, res, id) {
@@ -250,9 +246,5 @@ module.exports = {
         res.sendStatus(404);
       }
     })
-    
-
-    
   }]
-
 }
