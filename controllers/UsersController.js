@@ -1,3 +1,5 @@
+'use strict';
+
 var folder    = 'players',
     models    = require('../models'),
     bCrypt    = require('bcrypt-nodejs'),
