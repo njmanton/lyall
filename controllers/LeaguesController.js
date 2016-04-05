@@ -148,35 +148,38 @@ module.exports = {
   }],
 
   post_pending: [utils.isAdmin, utils.isAjax, function(req, res) {
-    // handle a post request - result of accepting/rejecting a user league
-    // post format { organiser: <organiser email>, league: <league id>, decision: <A|R> }
+    // handle decision on accepting/rejecting a user league
+    // post format { uid: <organiser id>, league: <league id>, decision: <A|R> }
     let decision = req.body.decision;
-    let user = models.User.findOne({
-      where: { id: req.body.organiser },
-      attributes: ['id', 'email'],
-      raw: true
-    });
-    var process, email;
+    let user = models.User.findById(req.body.uid);
+    let league = models.League.findById(req.body.league);
+    var process, template;
     if (decision == 'A') {
-
+      template = 'league_create_accept';
       process = models.League.update({
         pending: 0
       }, {
         where: [{ 'id': req.body.league }, { pending: 1 }]
       });
-
     } else if (decision == 'R') {
-
+      template = 'league_create_reject';
       process = models.League.destroy({
         where: [{ id: req.body.league }, { pending: 1 }]
       })
-
     }
     models.sequelize.Promise.join(
       user,
+      league,
       process,
-      function(user, process) {
+      function(user, league, process) {
         // send some emails
+        let cc        = false,
+            subject   = 'Goalmine User League Request',
+            context   = {
+              user: user.username,
+              league: league.name
+            };
+        //mail.send(user.email, cc, subject, template, context, function(mail_result) {
         // process returns number of affected rows
         res.send(process > 0);
       }
