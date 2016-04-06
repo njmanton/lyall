@@ -148,32 +148,36 @@ module.exports = {
       where: [{ pending: 1 }, { id: req.body.lid }],
       include: {
         model: models.User,
-        attributes: ['id', 'username']
+        attributes: ['id', 'username', 'email']
       }
     }).then(function(league) {
       if (league) {
         let template;
-        if (decision == 'A') {
-          template = 'league_create_accept';
-          models.League_User.create({
-            user_id: league.user.id,
-            league_id: league.id,
-            pending: 0
-          });
-          league.update({ pending: 0 });
-        } else if (decision == 'R') {
-          template = 'league_create_reject';
-          league.destroy();
-        }
         let subject = 'Goalmine User League Request',
             context = {
               user: league.user.username,
               league: league.name,
               id: league.id
             };
-        //mail.send(user.email, cc, subject, template, context, function(mail_result) {
-        // process returns number of affected rows
-        res.send(true);        
+        if (decision == 'A') {
+          template = 'league_create_accept';
+          let create = models.League_User.create({
+            user_id: league.user.id,
+            league_id: league.id,
+            pending: 0
+          });
+          let upd = league.update({ pending: 0 });
+          models.sequelize.Promise.all([create, upd]).then(function() {
+            //mail.send(league.user.email, false, subject, template, context, function(done) { })
+            res.send(true);
+          })
+        } else if (decision == 'R') {
+          template = 'league_create_reject';
+          league.destroy().then(function() {
+            //mail.send(league.user.email, false, subject, template, context, function(done) { })
+            res.send(true);
+          });
+        }
       } else {
         res.sendStatus(404);
       }
@@ -226,22 +230,25 @@ module.exports = {
     }).then(function(lu) {
       if (lu) {
         let template;
-        if (decision == 'A') {
-          template = 'league_join_accept';
-          lu.update({ pending: 0 });
-        } else if (decision == 'R') {
-          template = 'league_join_reject';
-          lu.destroy();
-        }
         let subject = 'Goalmine User League Request',
             context = {
               user: lu.user.username,
               league: lu.league.name,
               id: lu.league_id
             };
-        //mail.send(user.email, cc, subject, template, context, function(mail_result) {
-        // process returns number of affected rows
-        res.send(true);
+        if (decision == 'A') {
+          template = 'league_join_accept';
+          lu.update({ pending: 0 }).then(function() {
+            //mail.send()
+            res.send(true);
+          });
+        } else if (decision == 'R') {
+          template = 'league_join_reject';
+          lu.destroy().then(function() {
+            //mail.send()
+            res.send(true);
+          });
+        }
       } else {
         res.sendStatus(404);
       }
