@@ -83,9 +83,8 @@ module.exports = {
               }
             })
           }
-          let vs = (venue) ? venue.stadium : 'Venue Not Found!';
           res.render(folder + '/view', {
-            title: `Goalmine | ${vs}` ,
+            title: 'Goalmine | ' + venue.stadium,
             venue: venue,
             matches: games
           })
