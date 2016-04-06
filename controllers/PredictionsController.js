@@ -28,7 +28,7 @@ module.exports = {
       let then = moment(match.date).startOf('day');
       if (moment().isAfter(then) || match.result) {
         
-        res.send(false);
+        res.sendStatus(403);
 
       } else {
 
