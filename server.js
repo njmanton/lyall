@@ -53,6 +53,14 @@ app.use(router);
 require('./routes')(app);
 excon.setDirectory(__dirname + '/controllers').bind(router);
 
+app.use(function(req, res) {
+  console.log('404');
+  res.status(400);
+  res.render('errors/404', {
+    title: 'Uh-oh!'
+  });
+});
+
 // set up sequelize and start server listening
 models.sequelize.sync().then(function() {
   console.log('Sequelize initialised');
