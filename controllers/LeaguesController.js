@@ -51,7 +51,7 @@ module.exports = {
             players: players
           })          
         } else {
-          res.sendStatus(404);
+          res.status(404).render('errors/404');
         }
       }
     );
@@ -152,8 +152,8 @@ module.exports = {
       }
     }).then(function(league) {
       if (league) {
-        let template;
-        let subject = 'Goalmine User League Request',
+        let template,
+            subject = 'Goalmine User League Request',
             context = {
               user: league.user.username,
               league: league.name,
@@ -167,15 +167,15 @@ module.exports = {
             pending: 0
           });
           let upd = league.update({ pending: 0 });
-          models.sequelize.Promise.all([create, upd]).then(function() {
+          models.sequelize.Promise.all([create, upd]).then(function(p) {
             //mail.send(league.user.email, false, subject, template, context, function(done) { })
-            res.send(true);
+            res.send(!!p);
           })
         } else if (decision == 'R') {
           template = 'league_create_reject';
-          league.destroy().then(function() {
+          league.destroy().then(function(d) {
             //mail.send(league.user.email, false, subject, template, context, function(done) { })
-            res.send(true);
+            res.send(!!d);
           });
         }
       } else {

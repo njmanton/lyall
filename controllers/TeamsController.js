@@ -1,3 +1,5 @@
+'use strict';
+
 var models = require('../models'),
     ga     = require('group-array'),
     folder = 'teams';
@@ -80,7 +82,7 @@ module.exports = {
             matches: ga(games, 'stage')
           })
         } else {
-          res.sendStatus(404);
+          res.status(404).render('errors/404');
         }
       }
     )

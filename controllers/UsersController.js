@@ -52,7 +52,7 @@ module.exports = {
             preds: preds
           })           
         } else {
-          res.sendStatus(404);
+          res.status(404).render('errors/404');
         }
        
       }
