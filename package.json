@@ -39,6 +39,7 @@
     "chai": "^3.5.0",
     "chalk": "^1.1.3",
     "mocha": "^2.4.5",
-    "sequelize-auto": "^0.2.14"
+    "sequelize-auto": "^0.2.14",
+    "supertest": "^1.2.0"
   }
 }
