@@ -53,10 +53,9 @@ app.use(router);
 require('./routes')(app);
 excon.setDirectory(__dirname + '/controllers').bind(router);
 
+// final middleware to handle anything not matched by a route
 app.use(function(req, res) {
-  console.log('404');
-  res.status(400);
-  res.render('errors/404', {
+  res.status(400).render('errors/404', {
     title: 'Uh-oh!'
   });
 });
