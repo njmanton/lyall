@@ -5,6 +5,7 @@ assets/js/vendor
 assets/css/vendor
 config/db_config.js
 config/mail_config.js
+config/auth_config.js
 config/cfg.js
 *.sublime*
 TODO.md
