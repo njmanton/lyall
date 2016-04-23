@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 var models  = require('../models'),
@@ -10,7 +11,7 @@ var models  = require('../models'),
 module.exports = {
 
   get_index: function(req, res) {
-    models.League.findAll({
+    let leagues = models.League.findAll({
       raw: true,
       where: { 'pending': 0 },
       attributes: [
@@ -23,33 +24,58 @@ module.exports = {
         model: models.User,
         attributes: ['id', 'username']
       }]
-    }).then(function(leagues) {
-      res.render(folder + '/index', {
-        title: 'User Leagues',
-        data: leagues
-      })
-    })
+    });
+    let pending = null;
+    if (req.user && req.user.admin) {
+      pending = models.League.findAll({
+        where: { pending: 1 },
+        attributes: ['id', 'name', 'description', 'public'],
+        include: {
+          model: models.User,
+          attributes: ['id', 'username']
+        }
+      });
+    }
+    models.sequelize.Promise.join(
+      leagues,
+      pending,
+      function(leagues, pending) {
+        res.render(folder + '/index', {
+          title: 'User Leagues',
+          leagues: leagues,
+          pending: pending
+        });
+      });
   },
 
   get_id: function(req, res, id) {
-    var league = models.League.findById(id, {
-      raw: true,
+    let league = models.League.findById(id, {
       include: [{
         model: models.User,
         attributes: ['id', 'username']
       }]
     });
-    var players = models.League.table(models, id);
+    let pending = models.League_User.findAll({
+      where: [{ league_id: id}, { pending: 1 }],
+      include: {
+        model: models.User,
+        attributes: ['id','username']
+      }
+    });
+    let players = models.League.table(models, id);
     models.sequelize.Promise.join(
       league,
+      pending,
       players,
-      function(league, players) {
+      function(league, pending, players) {
         if (league) {
           res.render(folder + '/view', {
             title: `Goalmine | ${league.name}`,
             league: league,
-            players: players
-          })          
+            table: players,
+            pending: pending,
+            owner: (req.user && ((req.user == league.organiser) || req.user.admin))
+          });          
         } else {
           res.status(404).render('errors/404');
         }
@@ -60,7 +86,7 @@ module.exports = {
   get_create: [utils.isAuthenticated, function(req, res) {
     res.render(folder + '/create', {
       title: 'Goalmine | New League'
-    })
+    });
   }],
 
   get_available_league: [utils.isAjax, function(req, res, league) {
@@ -68,8 +94,8 @@ module.exports = {
     models.League.findOne({
       where: { name: league }
     }).then(function(found) {
-      res.send(found == null);
-    })
+      res.send(found === null);
+    });
   }],
 
   post_create: [utils.isAuthenticated, function(req, res) {
@@ -90,7 +116,7 @@ module.exports = {
       res.redirect('/leagues');
     }).catch(function(e) {
       console.log(chalk.bgRed('post_create_err'), e);
-    })
+    });
   }],
 
   get_id_join: [utils.isAuthenticated, function(req, res, id) {
@@ -118,10 +144,10 @@ module.exports = {
           res.send(e);
         }
 
-      })
+      });
     }).catch(function(e) {
       res.send(e);
-    })
+    });
   }],
 
   get_pending: [utils.isAjax, utils.isAdmin, function(req, res) {
@@ -137,7 +163,7 @@ module.exports = {
       res.send(leagues);
     }).catch(function(e) {
       console.log('get_pending', e);
-    })
+    });
   }],
 
   post_pending: [utils.isAdmin, utils.isAjax, function(req, res) {
@@ -170,7 +196,7 @@ module.exports = {
           models.sequelize.Promise.all([create, upd]).then(function(p) {
             //mail.send(league.user.email, false, subject, template, context, function(done) { })
             res.send(!!p);
-          })
+          });
         } else if (decision == 'R') {
           template = 'league_create_reject';
           league.destroy().then(function(d) {
@@ -185,7 +211,7 @@ module.exports = {
   }],
 
   get_id_pending: [utils.isAjax, function(req, res, id) {
-    // list all pending reequests for a given league
+    // list all pending requests for a given league
     var league = models.League.findById(id, {
       include: {
         model: models.User,
@@ -238,20 +264,20 @@ module.exports = {
             };
         if (decision == 'A') {
           template = 'league_join_accept';
-          lu.update({ pending: 0 }).then(function() {
+          lu.update({ pending: 0 }).then(function(ret) {
             //mail.send()
-            res.send(true);
+            res.send(ret);
           });
         } else if (decision == 'R') {
           template = 'league_join_reject';
-          lu.destroy().then(function() {
+          lu.destroy().then(function(ret) {
             //mail.send()
-            res.send(true);
+            res.send(ret);
           });
         }
       } else {
         res.sendStatus(404);
       }
-    })
+    });
   }]
-}
+};
