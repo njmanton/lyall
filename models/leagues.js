@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 var utils  = require('../utils'),
@@ -62,11 +63,11 @@ module.exports = function(sequelize, DataTypes) {
                 cs: 0,
                 cd: 0,
                 cr: 0
-              }
+              };
             }
 
-            table[name].points += results[x]['points'];
-            switch (results[x]['points']) {
+            table[name].points += results[x].points;
+            switch (results[x].points) {
               case 5:
               case 10:
                 table[name].cs++;
@@ -87,10 +88,7 @@ module.exports = function(sequelize, DataTypes) {
             league.push(table[prop]);
           }
           return _.orderBy(league, ['points', 'cs', 'cd', 'cr'], ['desc', 'desc', 'desc', 'desc']);
-
-
-          return results;
-        })
+        });
       },
       newLeague: function(models, body) {
         // process POST request for new league
