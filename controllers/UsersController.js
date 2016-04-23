@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 var folder    = 'players',
@@ -13,12 +14,11 @@ module.exports = {
 
   get_index: function(req, res) {
     models.User.table(models).then(function(preds) {
-      console.log(preds);
       res.render(folder + '/index', {
         title: 'Leaderboard',
         table: preds
       });
-    })
+    });
     
   },
 
@@ -50,19 +50,19 @@ module.exports = {
             title: 'Goalmine | ' + user.username,
             data: user,
             preds: preds
-          })           
+          });           
         } else {
           res.status(404).render('errors/404');
         }
        
       }
-    )
+    );
   },
 
   get_id_leagues: [utils.isAjax, function(req, res, id) {
     // send a list of leagues of which the user is a member
     models.League_User.findAll({
-      attributes: ['id', 'confirmed'],
+      attributes: ['id', 'pending'],
       raw: true,
       where: { user_id: id },
       include: {
@@ -75,7 +75,13 @@ module.exports = {
       } else {
         res.send(null);
       }
-    })
+    });
+  }],
+
+  get_update: [utils.isAuthenticated, function(req, res) {
+    res.render(folder + '/update', {
+      title: 'Update details'
+    });
   }],
 
   get_invite: [utils.isAuthenticated, function(req, res) {
@@ -90,7 +96,7 @@ module.exports = {
     // post format { email: <invitee email>, message: <message to send>, copy: <add inviter to cc>}
     models.User.invite(req.body, req.user).then(function(response) {
       res.send(response);
-    })
+    });
   }],
 
   get_confirm_id: [utils.isAnon, function(req, res, id) {
@@ -112,7 +118,7 @@ module.exports = {
           data: user
         });         
       }
-    })
+    });
   }],
 
   post_confirm: function(req, res) {
@@ -131,11 +137,11 @@ module.exports = {
         req.flash('success', 'Thank you, you account is now verified');
         res.redirect('/login');
       } else {
-        req.flash('error', 'There was a problem confirming that user account.')
+        req.flash('error', 'There was a problem confirming that user account.');
       }
     }).catch(function(err) {
       console.log('confirm_error', err);
-    })
+    });
   },
 
   get_available_username: [utils.isAjax, function(req, res, username) {
@@ -143,8 +149,8 @@ module.exports = {
     models.User.findOne({
       where: { username: username }
     }).then(function(found) {
-      res.send(found == null);
-    })
+      res.send(found === null);
+    });
   }],
 
   get_forgot: [utils.isAnon, function(req, res) {
@@ -158,7 +164,7 @@ module.exports = {
       where: { validated: 1 }
     }).then(function(users) {
       res.send(users);
-    })
+    });
   }],
 
   post_payment: [utils.isAdmin, utils.isAjax, function(req, res) {
@@ -169,7 +175,7 @@ module.exports = {
       where: { id: req.body.payee }
     }).then(function(rows) {
       res.send(rows);
-    })
+    });
   }],
 
   post_forgot: function(req, res) {
@@ -200,8 +206,8 @@ module.exports = {
       }
       req.flash('info', 'If those details were found, you will shortly receive an email explaining how to reset your password');
       res.redirect('/');
-    })
+    });
     
   }
 
-}
+};
