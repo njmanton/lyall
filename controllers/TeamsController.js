@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 var models = require('../models'),
@@ -14,8 +15,8 @@ module.exports = {
       res.render(folder + '/index', {
         title: 'Goalmine | Teams',
         teams: teams
-      })         
-    })
+      });         
+    });
   },
 
   get_id: function(req, res, id) {
@@ -42,7 +43,7 @@ module.exports = {
         model: models.Venue,
         attributes: ['id', 'stadium', 'city']
       }]    
-    })
+    });
     models.sequelize.Promise.join(
       team,
       matches,
@@ -74,17 +75,17 @@ module.exports = {
                 stadium: m.venue.stadium,
                 city: m.venue.city
               }     
-            })
+            });
           }
           res.render(folder + '/view', {
             title: `Goalmine | ${team.name}`,
             team: team,
             matches: ga(games, 'stage')
-          })
+          });
         } else {
           res.status(404).render('errors/404');
         }
       }
-    )
+    );
   }
-}
+};

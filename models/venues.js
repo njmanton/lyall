@@ -1,4 +1,5 @@
-/* jshint indent: 2 */
+// jshint node: true, esversion: 6
+'use strict';
 
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('venues', {

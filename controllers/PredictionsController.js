@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 var models  = require('../models'),
@@ -12,12 +13,11 @@ module.exports = {
   get_index: [utils.isAuthenticated, function(req, res) {
     // requires logged-in user
     models.User.predictions(models, req.user.id).then(function(preds) {
-      console.log(chalk.bgYellow(preds));
       res.render('players/predictions', {
         title: 'My Predictions',
         table: preds
       });
-    })
+    });
   }],
 
   post_update: [utils.isAuthenticated, utils.isAjax, function(req, res) {
@@ -34,7 +34,7 @@ module.exports = {
 
         models.Pred.findOne({
           where: [{ user_id: req.body.id }, { match_id: req.body.mid }]
-        }).then(function(pred) {
+        }).then((pred) => {
 
           if (pred) {
             pred.update({ prediction: req.body.pred }).then(function() { res.send('update'); });
@@ -43,16 +43,16 @@ module.exports = {
               user_id: req.body.id,
               match_id: req.body.mid,
               prediction: req.body.pred
-            }).then(function() { res.send('create'); })
+            }).then(function() { res.send('create'); });
           }
 
         }).catch(function(e) {
           console.log(e);
           res.send(false);
-        })
+        });
 
       }
-    })
+    });
     
   }],
 
@@ -81,10 +81,10 @@ module.exports = {
       if (!moment().isAfter(then) && !group_expired) {
         pred.update({
           joker: (req.body.mid == pred.match_id)
-        })
+        });
       }
-    })
+    });
     res.send(true);
   }]
 
-}
+};
