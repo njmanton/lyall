@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 var models  = require('../models'),
@@ -13,7 +14,7 @@ module.exports = {
 
   get_index: function(req, res) {
     models.Match.findAll({
-      raw: true,
+      order: 'stageorder DESC',
       attributes: [
         'id', 
         'result', 
@@ -37,14 +38,13 @@ module.exports = {
       res.render(folder + '/index', {
         title: 'Goalmine | Matches',
         matches: ga(data, 'stage')
-      })
-    })
+      });
+    });
   },
 
   get_id: function(req, res, id) {
     var match = models.Match.findOne({
       where: {id: id},
-      raw: true,
       attributes: [
         'id', 
         'result',
@@ -68,7 +68,6 @@ module.exports = {
     });
     var preds = models.Pred.findAll({
       where: { match_id: id },
-      raw: true,
       attributes: ['id', 'joker', 'prediction', 'points'],
       include: [{
         model: models.User,
@@ -81,24 +80,27 @@ module.exports = {
       preds,
       function(match, preds) {
         if (match) {
-          var then = moment(match.date).startOf('day');
+          var then = moment(match.date).startOf('day'),
+              ta = (match.TeamA) ? match.TeamA.name : 'tba',
+              tb = (match.TeamB) ? match.TeamB.name : 'tba';
+
           res.render(folder + '/view', {
-            title: 'Goalmine | ' + (match['TeamA.name'] || 'tba') + ' vs ' + (match['TeamB.name'] || 'tba'),
+            title: `Goalmine |  ${ta} vs ${tb}`,
             match: match,
             preds: preds,
             visible: (moment().isAfter(then) || cfg.ignoreExpiry)
-          })          
+          });          
         } else {
           res.status(404).render('errors/404');
         }
 
       }
-    )
+    );
   },
 
   post_result: [utils.isAdmin, utils.isAjax, function(req, res) {
     // ajax post to update score
-    // post format { id: <match id>, result: <match result> }
+    // post format { mid: <match id>, result: <match result> }
     var result = req.body.result;
     models.Match.update({
       result: result
@@ -107,16 +109,16 @@ module.exports = {
     }).then(function(rows) {
       // loop through each promise to update prediction scores
       var preds = models.Pred.findAll({
-        where: { match_id: req.body.id }
+        where: { match_id: req.body.mid }
       });
       models.sequelize.Promise.each(preds, function(pred) {
         let pts = utils.calc(pred.prediction, result, pred.joker);
         pred.update({
           points: pts
-        })
-      })
+        });
+      });
       res.send(rows > 0);
-    })
+    });
   }]
 
-}
+};
