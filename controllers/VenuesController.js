@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 var models  = require('../models'),
@@ -16,8 +17,8 @@ module.exports = {
       res.render(folder + '/index', {
         title: 'Goalmine | Venues',
         venues: venues
-      })
-    })
+      });
+    });
   },
 
   get_id: function(req, res, id) {
@@ -56,9 +57,10 @@ module.exports = {
           var games = [];
           // transform array
           for (var x = 0; x < matches.length; x++) {
-            var m = matches[x];
-            if (m.score == null && m.stage != 'G') {
-              var placeholders = m.group.split('v');
+            var m = matches[x],
+                placeholders = [];
+            if (m.score === null && m.stage != 'G') {
+              placeholders = m.group.split('v');
             }
             games.push({
               id: m.id,
@@ -81,17 +83,17 @@ module.exports = {
                 stadium: m.venue.stadium,
                 city: m.venue.city
               }
-            })
+            });
           }
           res.render(folder + '/view', {
             title: 'Goalmine | ' + venue.stadium,
             venue: venue,
             matches: games
-          })
+          });
         } else {
           res.status(404).render('errors/404');
         }
       }
-    )
+    );
   }
-}
+};
