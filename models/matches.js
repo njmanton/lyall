@@ -1,4 +1,5 @@
-/* jshint indent: 2 */
+// jshint node: true, esversion: 6
+'use strict';
 
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('matches', {
@@ -44,7 +45,7 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true
   }, {
     classMethods: {
-      listByGroup: function() {
+      listByGroup: function(models) {
         return this.findAll({
           attributes: [
             'id', 
@@ -66,7 +67,7 @@ module.exports = function(sequelize, DataTypes) {
           }]
         }).then(function(data) {
 
-        })
+        });
       }
     }
   });
