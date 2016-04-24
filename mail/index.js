@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 var config  = require('../config/mail_config'),
@@ -19,7 +20,7 @@ var mail = {
       to: recipient,
       subject: subject,
       text: message(context)
-    }
+    };
 
     if (cc) {
       data.cc = cc;
@@ -31,7 +32,7 @@ var mail = {
     }, function(err) {
       console.log('not sent', err); // move to winston
       done(err);
-    })
+    });
 
   },
 
@@ -41,7 +42,7 @@ var mail = {
       console.log('info', data);
     }, function(err) {
       console.log('err', err);
-    })
+    });
   },
 
   addMember: function(list, email, name) {
@@ -50,16 +51,16 @@ var mail = {
       subscribed: true,
       address: email,
       name: name
-    }
+    };
 
     mailgun.lists(list).members().create(user).then(function(data) {
       console.log('addMember', data);
     }, function(err) {
       console.log('addMember error', err);
-    })
+    });
 
   }
 
-}
+};
 
 module.exports = mail;
