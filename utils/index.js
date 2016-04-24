@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 const cfg = require('../config/cfg.js');
@@ -7,7 +8,7 @@ const points = {
   correct_difference: 3,
   correct_result: 1,
   joker_penalty: -1
-}
+};
 
 var sgn = function(a) {
   
@@ -15,14 +16,14 @@ var sgn = function(a) {
     return -1;
   } else if (a > 0) {
     return 1;
-  } else if (a == 0) {
+  } else if (a === 0) {
     return 0;
   } else {
     console.log('NaN');
     return NaN;
   }
 
-}
+};
 
 var utils = {
 
@@ -40,7 +41,7 @@ var utils = {
 
   // access functions used in routes
   isAjax: function(req, res, next) {
-    if (req.xhr || ~req.headers.accept.indexOf('json') || cfg.allowCurlAjax) {
+    if (req.xhr || cfg.allowCurlAjax) { //~req.headers.accept.indexOf('json') || cfg.allowCurlAjax) {
       return next();
     } else {
       res.sendStatus(403);
@@ -97,6 +98,6 @@ var utils = {
 
   }
 
-}
+};
 
-module.exports = utils
+module.exports = utils;
