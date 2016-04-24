@@ -1,3 +1,4 @@
+// jshint node: true, esversion: 6
 'use strict';
 
 var models    = require('./models'),
@@ -14,14 +15,14 @@ module.exports = function(app) {
   app.get('/mail', function(req, res) {
     //mail.getList('players@lcssl.org');
     res.send('done');
-  })
+  });
 
   // home page
   app.get('/', function(req, res) {
     res.render('main', {
       title: 'Welcome'
     });
-  })
+  });
 
   app.get('/home', utils.isAuthenticated, function(req, res) {
     models.Pred.findAll({
@@ -46,13 +47,13 @@ module.exports = function(app) {
         data: req.user,
         preds: preds,
         home: true
-      }) 
-    })
+      }); 
+    });
   });
 
   app.get('/flash', function(req, res){
     // Set a flash message by passing the key, followed by the value, to req.flash(). 
-    req.flash('info', 'Flash is back!')
+    req.flash('info', 'Flash is back!');
     res.redirect('/');
   });
 
@@ -60,8 +61,8 @@ module.exports = function(app) {
   app.get('/login', utils.isAnon, function(req, res) {
     res.render('players/login', {
       title: 'Login'
-    })
-  })
+    });
+  });
 
   app.post('/login', 
     passport.authenticate('local', {
@@ -69,20 +70,34 @@ module.exports = function(app) {
       failureRedirect: '/login',
       failureFlash: true
     })
-  )
+  );
 
   app.get('/auth/facebook', 
     passport.authenticate('facebook', {
-      scope: ['email', 'photo']
+      //scope: ['email', 'photo']
     })
-  )
+  );
 
   app.get('/auth/facebook/callback', 
     passport.authenticate('facebook', {
       successRedirect: '/home',
       failureRedirect: '/login'
     })
-  )
+  );
+
+  app.get('/auth/google', 
+    passport.authenticate('google', {
+      scope: ['profile']
+    })
+  );
+
+  app.get('/auth/google/callback',
+    passport.authenticate('google', {
+      successRedirect: '/home',
+      failureRedirect: '/login',
+      failureFlash: true
+    })
+  );
 
   app.get('/logout', function(req, res) {
     req.logout();
@@ -95,13 +110,13 @@ module.exports = function(app) {
     res.render('pages/about', {
       title: 'About Euro Goalmine'
     });
-  })
+  });
 
   // any other static content
   app.get('/pages/:page', function(req, res) {
     res.render('pages/' + req.params.page, {
       title: req.params.page
     });
-  })
+  });
 
-}
+};
