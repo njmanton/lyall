@@ -15,6 +15,7 @@ module.exports = {
   get_index: function(req, res) {
     models.Match.findAll({
       order: 'stageorder DESC',
+      where: [{ teama_id: { ne: null } }, { teamb_id: { ne: null } }],
       attributes: [
         'id', 
         'result', 
