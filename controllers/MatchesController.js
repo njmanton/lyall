@@ -19,7 +19,7 @@ module.exports = {
       attributes: [
         'id', 
         'result', 
-        [models.sequelize.fn('date_format', models.sequelize.col('date'), '%a, %e %b %H:%i'), 'date'],
+        [models.sequelize.fn('date_format', models.sequelize.col('date'), '%a %e/%m, %H:%i'), 'date'],
         'group',
         'stage'
       ],
@@ -50,7 +50,6 @@ module.exports = {
         'id', 
         'result',
         'date', 
-        [models.sequelize.fn('date_format', models.sequelize.col('date'), '%a, %e %b %H:%i'), 'fdate'],
         'group', 
         'stage'
       ],
@@ -85,6 +84,7 @@ module.exports = {
               ta = (match.TeamA) ? match.TeamA.name : 'tba',
               tb = (match.TeamB) ? match.TeamB.name : 'tba';
 
+          match.fdate = moment(match.date).format('ddd DD/MM HH:mm')
           res.render(folder + '/view', {
             title: `Goalmine |  ${ta} vs ${tb}`,
             match: match,
