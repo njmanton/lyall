@@ -23,7 +23,7 @@ module.exports = {
     var team = models.Team.findById(id);
     var matches = models.Match.findAll({
       where: { $or: [{ teama_id: id }, { teamb_id: id }] },
-      //raw: true,
+      order: 'stageorder DESC',
       attributes: [
         'id', 
         'result', 
