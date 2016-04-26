@@ -5,6 +5,9 @@ main entry point for app
 
 ******************************************************************************/
 
+// jshint node: true, esversion: 6
+'use strict';
+
 var express         = require('express'),
     app             = express(),
     pkg             = require('./package.json'),
@@ -17,10 +20,20 @@ var express         = require('express'),
     bars            = require('express-handlebars');
 
 // handlebars as templating engine
-app.engine('.hbs', bars({
-  defaultLayout: 'layout', extname: '.hbs'
-}));
+var hbs = bars.create({
+  defaultLayout: 'layout',
+  extname: '.hbs',
+  helpers: {
+    groupPrefix: function(data) {
+      var pre = (~['A', 'B', 'C', 'D', 'E', 'F'].indexOf(data)) ? 'Group ' : '';
+      return pre + data;      
+    }
+  }
+});
+
+app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
+
 
 // set static route
 app.use(express.static('assets'));
@@ -65,5 +78,5 @@ models.sequelize.sync().then(function() {
   console.log('Sequelize initialised');
   var server = app.listen(app.get('port'), function() {
     console.log(pkg.name, 'running on port', server.address().port);
-  })
-})
+  });
+});
