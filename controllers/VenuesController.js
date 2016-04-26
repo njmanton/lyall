@@ -31,7 +31,7 @@ module.exports = {
       attributes: [
         'id', 
         'result', 
-        [models.sequelize.fn('date_format', models.sequelize.col('date'), '%Y-%m-%d'), 'date'],
+        [models.sequelize.fn('date_format', models.sequelize.col('date'), '%a %e/%m, %H:%i'), 'date'],
         'group', 
         'stage'
       ],
@@ -59,7 +59,7 @@ module.exports = {
           for (var x = 0; x < matches.length; x++) {
             var m = matches[x],
                 placeholders = [];
-            if (m.score === null && m.stage != 'G') {
+            if (m.stage.length > 1) {
               placeholders = m.group.split('v');
             }
             games.push({
