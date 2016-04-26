@@ -80,13 +80,16 @@ module.exports = {
       preds,
       function(match, preds) {
         if (match) {
-          var then = moment(match.date).startOf('day'),
-              ta = (match.TeamA) ? match.TeamA.name : 'tba',
-              tb = (match.TeamB) ? match.TeamB.name : 'tba';
-
+          let placeholders = [];
+          if (match.stage.length > 1) {
+            placeholders = match.group.split('v');
+          }
+          let then = moment(match.date).startOf('day');
+          match.ta = (match.TeamA) ? match.TeamA.name : placeholders[0];
+          match.tb = (match.TeamB) ? match.TeamB.name : placeholders[1];
           match.fdate = moment(match.date).format('ddd DD/MM HH:mm')
           res.render(folder + '/view', {
-            title: `Goalmine |  ${ta} vs ${tb}`,
+            title: `Goalmine |  ${match.ta} vs ${match.tb}`,
             match: match,
             preds: preds,
             visible: (moment().isAfter(then) || cfg.ignoreExpiry)
