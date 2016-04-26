@@ -163,7 +163,10 @@ module.exports = {
       attributes: ['id', 'username', 'paid'],
       where: { validated: 1 }
     }).then(function(users) {
-      res.send(users);
+      res.render(folder + '/payment', {
+        title: 'Payments',
+        users: users
+      });
     });
   }],
 
@@ -174,6 +177,7 @@ module.exports = {
     }, {
       where: { id: req.body.payee }
     }).then(function(rows) {
+      // send an email to the user
       res.send(rows);
     });
   }],
