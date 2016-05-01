@@ -110,7 +110,7 @@ module.exports = {
       }
     }).then(function(user) {
       if (!user) {
-        req.flash('message', 'Account not found');
+        req.flash('error', 'Sorry, that activation code (' + id + ') was not recognised. Please check and try again');
         res.redirect('/');
       } else {
         res.render(folder + '/confirm', {
@@ -138,6 +138,7 @@ module.exports = {
         res.redirect('/login');
       } else {
         req.flash('error', 'There was a problem confirming that user account.');
+        res.redirect('/users/confirm/' + req.body.code);
       }
     }).catch(function(err) {
       console.log('confirm_error', err);
@@ -148,6 +149,14 @@ module.exports = {
     // checks whether typed username in users/confirm is available
     models.User.findOne({
       where: { username: username }
+    }).then(function(found) {
+      res.send(found === null);
+    });
+  }],
+
+  get_available_email: [utils.isAjax, function(req, res, email) {
+    models.User.findOne({
+      where: { email: email }
     }).then(function(found) {
       res.send(found === null);
     });
@@ -212,6 +221,17 @@ module.exports = {
       res.redirect('/');
     });
     
+  },
+
+  get_unpred: function(req, res) {
+    if (req.user) {
+      models.User.missing(models, req.user.id).then(function(missing) {
+        res.send(missing);
+      });      
+    } else {
+      req.status(404).render('errors/404');
+    }
+
   }
 
 };

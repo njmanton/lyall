@@ -144,7 +144,6 @@ module.exports = function(sequelize, DataTypes) {
           let preds = [];
           for (var x = 0; x < matches.length; x++) {
             let m = matches[x];
-            console.log(m);
             let pred = {
               mid: m.id,
               group: m.group,
@@ -205,7 +204,18 @@ module.exports = function(sequelize, DataTypes) {
           });
           
         });
-      } // end invite
+      }, 
+      missing: function(models, uid) {
+        var qry = `SELECT
+          M.stage AS stage,
+          COUNT(M.id) AS missing
+          FROM matches M
+          LEFT JOIN predictions P
+          ON (P.match_id = M.id AND P.user_id = ${uid})
+          WHERE (M.teama_id IS NOT NULL AND M.teamb_id IS NOT NULL AND P.user_id IS NULL)
+          GROUP BY M.stage`;
+        return models.sequelize.query(qry, { type: sequelize.QueryTypes.SELECT });
+      }
     }
   }, {
     tableName: 'users',
