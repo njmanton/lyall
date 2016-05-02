@@ -21,33 +21,35 @@ module.exports = {
 
   get_id: function(req, res, id) {
     var team = models.Team.findById(id);
+    var tab = models.Team.table(models, id);
     var matches = models.Match.findAll({
-      where: { $or: [{ teama_id: id }, { teamb_id: id }] },
-      order: 'stageorder DESC',
-      attributes: [
-        'id', 
-        'result', 
-        [models.sequelize.fn('date_format', models.sequelize.col('date'), '%a, %e %b %H:%i'), 'date'],
-        'group',
-        'stage'
-      ],
-      include: [{
-        model: models.Team,
-        as: 'TeamA',
-        attributes: ['id', 'name', 'sname']
-      }, {
-        model: models.Team,
-        as: 'TeamB',
-        attributes: ['id', 'name', 'sname']
-      }, {
-        model: models.Venue,
-        attributes: ['id', 'stadium', 'city']
-      }]    
-    });
+          where: { $or: [{ teama_id: id }, { teamb_id: id }] },
+          order: 'stageorder DESC',
+          attributes: [
+            'id', 
+            'result', 
+            [models.sequelize.fn('date_format', models.sequelize.col('date'), '%a, %e %b %H:%i'), 'date'],
+            'group',
+            'stage'
+          ],
+          include: [{
+            model: models.Team,
+            as: 'TeamA',
+            attributes: ['id', 'name', 'sname']
+          }, {
+            model: models.Team,
+            as: 'TeamB',
+            attributes: ['id', 'name', 'sname']
+          }, {
+            model: models.Venue,
+            attributes: ['id', 'stadium', 'city']
+          }]    
+        });
     models.sequelize.Promise.join(
       team,
+      tab,
       matches,
-      function(team, matches) {
+      function(team, tab, matches) {
         if (team) {
           var games = [];
           for (var x = 0; x < matches.length; x++) {
@@ -80,6 +82,7 @@ module.exports = {
           res.render(folder + '/view', {
             title: `Goalmine | ${team.name}`,
             team: team,
+            table: tab,
             matches: ga(games, 'stage')
           });
         } else {
