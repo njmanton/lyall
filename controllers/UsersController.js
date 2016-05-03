@@ -86,9 +86,18 @@ module.exports = {
 
   get_invite: [utils.isAuthenticated, function(req, res) {
     // requires loged in user
-    res.render(folder + '/invite', {
-      title: 'Invite a friend'
-    });
+    let inviter = req.user ? req.user.id : 0;
+    models.User.findAll({
+      where: { referredby: inviter },
+      raw: true,
+      attributes: ['email', 'validated']
+    }).then((invitees) => {
+      res.render(folder + '/invite', {
+        title: 'Invite a friend',
+        list: invitees
+      });
+    })
+
   }],
 
   post_invite: [utils.isAuthenticated, function(req, res) {
@@ -149,14 +158,6 @@ module.exports = {
     // checks whether typed username in users/confirm is available
     models.User.findOne({
       where: { username: username }
-    }).then(function(found) {
-      res.send(found === null);
-    });
-  }],
-
-  get_available_email: [utils.isAjax, function(req, res, email) {
-    models.User.findOne({
-      where: { email: email }
     }).then(function(found) {
       res.send(found === null);
     });
@@ -223,7 +224,7 @@ module.exports = {
     
   },
 
-  get_unpred: function(req, res) {
+  get_missing: function(req, res) {
     if (req.user) {
       models.User.missing(models, req.user.id).then(function(missing) {
         res.send(missing);
