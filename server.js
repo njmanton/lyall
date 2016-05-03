@@ -24,7 +24,7 @@ var hbs = bars.create({
   defaultLayout: 'layout',
   extname: '.hbs',
   helpers: {
-    groupPrefix: function(data) {
+    groupPrefix: (data) => {
       var pre = (~['A', 'B', 'C', 'D', 'E', 'F'].indexOf(data)) ? 'Group ' : '';
       return pre + data;      
     }
@@ -33,7 +33,6 @@ var hbs = bars.create({
 
 app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
-
 
 // set static route
 app.use(express.static('assets'));
@@ -51,7 +50,7 @@ app.use(expressSession({
   saveUninitialized: false
 }));
 app.use(flash());
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.locals.flash_success = req.flash('success');
   res.locals.flash_error = req.flash('error');
   res.locals.flash_info = req.flash('info');
@@ -76,7 +75,7 @@ app.use(function(req, res) {
 // set up sequelize and start server listening
 models.sequelize.sync().then(function() {
   console.log('Sequelize initialised');
-  var server = app.listen(app.get('port'), function() {
+  const server = app.listen(app.get('port'), () => {
     console.log(pkg.name, 'running on port', server.address().port);
   });
 });
