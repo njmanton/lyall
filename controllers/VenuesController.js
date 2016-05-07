@@ -14,6 +14,9 @@ module.exports = {
       attributes: ['id', 'stadium', 'city', 'capacity', 'image'],
       raw: true
     }).then(function(venues) {
+      venues.map((c) => {
+        c.capacity = c.capacity.toLocaleString();
+      })
       res.render(folder + '/index', {
         title: 'Goalmine | Venues',
         venues: venues
