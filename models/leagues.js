@@ -44,19 +44,21 @@ module.exports = function(sequelize, DataTypes) {
           P.prediction,
           M.result,
           P.points,
-          U.username
+          U.username,
+          U.id AS uid
           FROM PREDICTIONS P
           LEFT JOIN users U ON P.user_id = U.id
           LEFT JOIN league_user LU ON U.id = LU.user_id
           LEFT JOIN matches M ON P.match_id = M.id
           WHERE LU.league_id = ${league} AND LU.pending = 0`;
-        return models.sequelize.query(qry, { type: sequelize.QueryTypes.SELECT }).then(function(results) {
+        return models.sequelize.query(qry, { type: sequelize.QueryTypes.SELECT }).then(results => {
           var table = {};
           for (var x = 0; x < results.length; x++) {
             var name = results[x].username;
             if (!(name in table)) {
               table[name] = {
                 name: name,
+                uid: results[x].uid,
                 id: results[x].id,
                 points: 0,
                 preds: 0,
