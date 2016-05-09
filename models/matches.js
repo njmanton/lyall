@@ -25,6 +25,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
+    winmethod: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true
+    },
     venue_id: {
       type: DataTypes.INTEGER(4),
       allowNull: false,
@@ -39,6 +43,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
       defaultValue: '0'
+    },
+    stageorder: {
+      type: DataTypes.INTEGER(4),
+      allowNull: false
     }
   }, {
     tableName: 'matches',
