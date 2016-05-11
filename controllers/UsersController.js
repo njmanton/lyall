@@ -7,8 +7,7 @@ var folder    = 'players',
     passport  = require('passport'),
     chalk     = require('chalk'),
     utils     = require('../utils'),
-    mail      = require('../mail'),
-    bp        = require('body-parser');
+    mail      = require('../mail');
 
 module.exports = {
 
@@ -19,7 +18,6 @@ module.exports = {
         table: preds
       });
     });
-    
   },
 
   get_id: function(req, res, id) {
@@ -103,8 +101,10 @@ module.exports = {
   post_invite: [utils.isAuthenticated, function(req, res) {
     // validate form fields
     // post format { email: <invitee email>, message: <message to send>, copy: <add inviter to cc>}
-    models.User.invite(req.body, req.user).then(function(response) {
-      res.send(response);
+    models.User.invite(req.body, req.user).then(response => {
+      req.flash('info', 'invite sent');
+      res.redirect('/users/invite');
+      //res.send(response);
     });
   }],
 
@@ -143,7 +143,7 @@ module.exports = {
       where: { username: req.body.code }
     }).then(function(user) {
       if (user) {
-        req.flash('success', 'Thank you, you account is now verified');
+        req.flash('success', 'Thank you, your account is now verified');
         res.redirect('/login');
       } else {
         req.flash('error', 'There was a problem confirming that user account.');
@@ -198,11 +198,11 @@ module.exports = {
     // post format { username: <username>, email: <email> }
     models.User.findOne({
       where: [{ username: req.body.username }, { email: req.body.email }]
-    }).then(function(user) {
+    }).then(user => {
       if (user) {
         var reset = utils.getTempName(8);
         user.resetpwd = reset;
-        user.save().then(function() {
+        user.save().then(() => {
           var template = '',
               cc = 'admin@euro.goalmine.eu',
               subject = 'Password reset request',
@@ -211,9 +211,9 @@ module.exports = {
                 reset: reset
               };
 
-          //mail.send(req.body.email, cc, subject, template, context, function(mail_result) {
+          mail.send(req.body.email, cc, subject, template, context, function(mail_result) {
             
-          //})
+          })
         }).catch(function(e) {
           console.log('error', e);
         });
@@ -230,7 +230,7 @@ module.exports = {
         res.send(missing);
       });      
     } else {
-      req.status(404).render('errors/404');
+      res.status(404).render('errors/404');
     }
 
   }
