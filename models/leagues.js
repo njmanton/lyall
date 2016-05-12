@@ -59,7 +59,6 @@ module.exports = function(sequelize, DataTypes) {
               table[name] = {
                 name: name,
                 uid: results[x].uid,
-                id: results[x].id,
                 points: 0,
                 preds: 0,
                 cs: 0,
