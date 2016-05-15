@@ -7,19 +7,18 @@ var models  = require('../models'),
     ga      = require('group-array'),
     utils   = require('../utils'),
     cfg     = require('../config/cfg'),
-    chalk   = require('chalk'),
-    bp      = require('body-parser');
+    chalk   = require('chalk');
 
 module.exports = {
 
   get_index: function(req, res) {
     models.Match.findAll({
-      order: 'stageorder DESC',
+      order: 'stageorder DESC, date ASC',
       where: [{ teama_id: { ne: null } }, { teamb_id: { ne: null } }],
       attributes: [
         'id', 
-        'result', 
-        [models.sequelize.fn('date_format', models.sequelize.col('date'), '%a %e/%m, %H:%i'), 'date'],
+        'result',
+        'date', 
         'group',
         'stage'
       ],
@@ -35,7 +34,8 @@ module.exports = {
         model: models.Venue,
         attributes: ['id', 'stadium', 'city']
       }]
-    }).then(function(data) {
+    }).then(data => {
+      data.map(m => { m.fdate = moment(m.date).format('ddd DD MMM, HH:mm'); });
       res.render(folder + '/index', {
         title: 'Goalmine | Matches',
         matches: ga(data, 'stage')
@@ -45,7 +45,7 @@ module.exports = {
 
   get_id: function(req, res, id) {
     var match = models.Match.findOne({
-      where: {id: id},
+      where: { id: id },
       attributes: [
         'id', 
         'result',
@@ -64,6 +64,9 @@ module.exports = {
       }, {
         model: models.Venue,
         attributes: ['id', 'stadium', 'city']
+      }, {
+        model: models.Goal,
+        attributes: ['id', 'team_id', 'scorer', 'type', 'time', 'tao']
       }]
     });
     var preds = models.Pred.findAll({
@@ -87,12 +90,13 @@ module.exports = {
           let then = moment(match.date).startOf('day');
           match.ta = (match.TeamA) ? match.TeamA.name : placeholders[0];
           match.tb = (match.TeamB) ? match.TeamB.name : placeholders[1];
-          match.fdate = moment(match.date).format('ddd DD/MM HH:mm')
+          match.fdate = moment(match.date).format('ddd DD/MM HH:mm');
+          match.goals.map(m => { m.home = (match.TeamA.id == m.team_id) });
           res.render(folder + '/view', {
             title: `Goalmine |  ${match.ta} vs ${match.tb}`,
             match: match,
             preds: preds,
-            visible: (moment().isAfter(then) || cfg.ignoreExpiry)
+            visible: (moment().isAfter(then) || cfg.ignoreExpiry || (match.id < 37 ))
           });          
         } else {
           res.status(404).render('errors/404');
@@ -101,6 +105,37 @@ module.exports = {
       }
     );
   },
+
+  get_id_result: [utils.isAdmin, function(req, res, id) {
+
+    models.Match.findOne({
+      where: { id: id },
+      attributes: ['id', 'result', 'group', 'stage'],
+      include: [{
+        model: models.Team,
+        as: 'TeamA',
+        attributes: ['id', 'name', 'sname']
+      }, {
+        model: models.Team,
+        as: 'TeamB',
+        attributes: ['id', 'name', 'sname']
+      }, {
+        model: models.Goal,
+        attributes: ['id', 'team_id', 'scorer', 'type', 'time', 'tao']
+      }]
+    }).then(match => {
+      if (!match) {
+        res.status(404).render('errors/404');
+      } else {
+        match.goals.map(m => { m.home = (match.TeamA.id == m.team_id) });
+        res.render(folder + '/result', {
+          title: 'Edit Result',
+          match: match
+        })
+      }
+    });
+
+  }],
 
   post_result: [utils.isAdmin, utils.isAjax, function(req, res) {
     // ajax post to update score

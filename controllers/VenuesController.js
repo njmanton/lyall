@@ -3,6 +3,7 @@
 
 var models  = require('../models'),
     Promise = require('bluebird'),
+    moment  = require('moment'),
     _       = require('lodash'),
     chalk   = require('chalk'),
     folder  = 'venues';
@@ -14,9 +15,7 @@ module.exports = {
       attributes: ['id', 'stadium', 'city', 'capacity', 'image'],
       raw: true
     }).then(function(venues) {
-      venues.map((c) => {
-        c.capacity = c.capacity.toLocaleString();
-      })
+      venues.map(c => c.capacity = c.capacity.toLocaleString());
       res.render(folder + '/index', {
         title: 'Goalmine | Venues',
         venues: venues
@@ -31,10 +30,11 @@ module.exports = {
     });
     var matches = models.Match.findAll({
       where: { venue_id: id },
+      order: 'date ASC',
       attributes: [
         'id', 
         'result', 
-        [models.sequelize.fn('date_format', models.sequelize.col('date'), '%a %e/%m, %H:%i'), 'date'],
+        'date',
         'group', 
         'stage'
       ],
@@ -68,7 +68,7 @@ module.exports = {
             games.push({
               id: m.id,
               result: m.result || '-',
-              date: m.date,
+              date: moment(m.date).format('ddd DD MMM, HH:mm'),
               stage: m.stage,
               group: m.group,
               teama: {
