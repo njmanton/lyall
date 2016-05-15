@@ -2,6 +2,7 @@
 'use strict';
 
 var models = require('../models'),
+    moment = require('moment'),
     ga     = require('group-array'),
     folder = 'teams';
 
@@ -24,11 +25,11 @@ module.exports = {
     var tab = models.Team.table(models, id);
     var matches = models.Match.findAll({
           where: { $or: [{ teama_id: id }, { teamb_id: id }] },
-          order: 'stageorder DESC',
+          order: 'stageorder DESC, date ASC',
           attributes: [
             'id', 
             'result', 
-            [models.sequelize.fn('date_format', models.sequelize.col('date'), '%a, %e %b %H:%i'), 'date'],
+            'date',
             'group',
             'stage'
           ],
@@ -63,7 +64,7 @@ module.exports = {
 
             games.push({
               id: m.id,
-              date: m.date,
+              date: moment(m.date).format('ddd DD MMM, HH:mm'),
               group: m.group,
               stage: m.stage,
               opponent: {
@@ -71,7 +72,7 @@ module.exports = {
                 name: (home) ? m.TeamB.name : m.TeamA.name,
                 flag: (home) ? m.TeamB.sname : m.TeamA.sname
               },
-              result: result,
+              result: result || '-',
               venue: {
                 id: m.venue.id,
                 stadium: m.venue.stadium,
