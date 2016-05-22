@@ -83,6 +83,7 @@ module.exports = function(sequelize, DataTypes) {
             var name = preds[x].user.username;
             if (!(name in table)) {
               table[name] = {
+                rank: 0,
                 name: name,
                 id: preds[x].user.id,
                 points: 0,
@@ -107,6 +108,10 @@ module.exports = function(sequelize, DataTypes) {
               case 2:
                 table[name].cr++;
             }
+            table[name].order = table[name].points + 
+                                (table[name].cs / 100) +
+                                (table[name].cd / 10000) +
+                                (table[name].cr / 1000000);
 
           }
 
@@ -115,7 +120,21 @@ module.exports = function(sequelize, DataTypes) {
           for (var prop in table) {
             league.push(table[prop]);
           }
-          return _.orderBy(league, ['points', 'cs', 'cd', 'cr'], ['desc', 'desc', 'desc', 'desc']);
+
+          league = _.orderBy(league, ['order'], ['desc']);
+          let row = 0,
+              rank = 1,
+              prev = 0;
+          for (var x = 0; x < league.length; x++) {
+            if (league[x].order == prev) {
+              row++;
+            } else {
+              rank = ++row;
+            }
+            prev = league[x].order;
+            league[x].rank = rank;
+          }
+          return league;
         });
       },
       predictions: function(models, uid) {
@@ -181,6 +200,9 @@ module.exports = function(sequelize, DataTypes) {
       invite: function(body, referrer) {
         // validate inputs: body.email, body.copy
         // get a temporary code
+
+        if (!referrer || !body) { return false; }
+
         const code = utils.getTempName(8);
 
         return this.create({
@@ -188,21 +210,22 @@ module.exports = function(sequelize, DataTypes) {
           email: body.email,
           password: code,
           referredby: referrer.id
-        }).then(function(invite) {
+        }).then(invite => {
           
           var template  = 'invite.hbs',
               subject   = 'Invitation',
               context   = {
                 name: referrer.username,
+                custom: body.message,
                 email: referrer.email,
                 code: code
               };
 
           var cc = (body.copy) ? referrer.email : null;
-          mail.send(invite.email, cc, subject, template, context, function(mail_result) {
+          return mail.send(invite.email, cc, subject, template, context, function(mail_result) {
             return [invite, mail_result];
           });
-          
+
         });
       }, 
       missing: function(models, uid) {
