@@ -81,14 +81,31 @@ module.exports = function(sequelize, DataTypes) {
               case 2:
                 table[name].cr++;
             }
-            
+            table[name].order = table[name].points + 
+                                (table[name].cs / 100) +
+                                (table[name].cd / 10000) +
+                                (table[name].cr / 1000000);            
           }
 
           var league = [];
           for (var prop in table) {
             league.push(table[prop]);
           }
-          return _.orderBy(league, ['points', 'cs', 'cd', 'cr'], ['desc', 'desc', 'desc', 'desc']);
+          league = _.orderBy(league, ['order'], ['desc']);
+          let row = 0,
+              rank = 1,
+              prev = 0;
+          for (var x = 0; x < league.length; x++) {
+            if (league[x].order == prev) {
+              row++;
+            } else {
+              rank = ++row;
+            }
+            prev = league[x].order;
+            league[x].rank = rank;
+          }
+          return league;
+
         });
       },
       newLeague: function(models, body) {
