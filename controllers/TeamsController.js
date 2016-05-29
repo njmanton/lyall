@@ -51,6 +51,7 @@ module.exports = {
       tab,
       matches,
       function(team, tab, matches) {
+        tab.map(t => t.gd = ((t.gd > 0 ? '+' : '') + t.gd));
         if (team) {
           var games = [];
           for (var x = 0; x < matches.length; x++) {
