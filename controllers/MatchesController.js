@@ -7,6 +7,7 @@ var models  = require('../models'),
     ga      = require('group-array'),
     utils   = require('../utils'),
     cfg     = require('../config/cfg'),
+    util    = require('util'),
     chalk   = require('chalk');
 
 module.exports = {
@@ -138,7 +139,7 @@ module.exports = {
   }],
 
   get_id_heatmap: [utils.isAjax, function(req, res, id) {
-    if (id < 1 || id > 51) { res.sendStatus(404); }
+    if (id < 1 || id > 51 || !util.isNumber(id)) { res.sendStatus(404); return false; }
 
     let qry = 'SELECT prediction, COUNT(id) AS cnt FROM predictions WHERE match_id=' + id + ' GROUP BY prediction';
     var preds = models.sequelize.query(qry, { type: models.sequelize.QueryTypes.SELECT });
