@@ -80,39 +80,40 @@ module.exports = function(sequelize, DataTypes) {
         }).then(function(preds) {
           var table = {};
           for (var x = 0; x < preds.length; x++) {
-            var name = preds[x].user.username;
-            if (!(name in table)) {
-              table[name] = {
-                rank: 0,
-                name: name,
-                id: preds[x].user.id,
-                points: 0,
-                preds: 0,
-                cs: 0,
-                cd: 0,
-                cr: 0
-              };
-            }
+            if (preds[x].user) {
+              var name = preds[x].user.username;
+              if (!(name in table)) {
+                table[name] = {
+                  rank: 0,
+                  name: name,
+                  id: preds[x].user.id,
+                  points: 0,
+                  preds: 0,
+                  cs: 0,
+                  cd: 0,
+                  cr: 0
+                };
+              }
 
-            table[name].points += preds[x].points;
-            switch (preds[x].points) {
-              case 5:
-              case 10:
-                table[name].cs++;
-                break;
-              case 3:
-              case 6:
-                table[name].cd++;
-                break;
-              case 1:
-              case 2:
-                table[name].cr++;
+              table[name].points += preds[x].points;
+              switch (preds[x].points) {
+                case 5:
+                case 10:
+                  table[name].cs++;
+                  break;
+                case 3:
+                case 6:
+                  table[name].cd++;
+                  break;
+                case 1:
+                case 2:
+                  table[name].cr++;
+              }
+              table[name].order = table[name].points + 
+                                  (table[name].cs / 100) +
+                                  (table[name].cd / 10000) +
+                                  (table[name].cr / 1000000);              
             }
-            table[name].order = table[name].points + 
-                                (table[name].cs / 100) +
-                                (table[name].cd / 10000) +
-                                (table[name].cr / 1000000);
-
           }
 
           // sort the table
