@@ -7,6 +7,7 @@ var folder    = 'players',
     passport  = require('passport'),
     chalk     = require('chalk'),
     utils     = require('../utils'),
+    moment    = require('moment'),
     mail      = require('../mail');
 
 module.exports = {
@@ -102,9 +103,9 @@ module.exports = {
     // validate form fields
     // post format { email: <invitee email>, message: <message to send>, copy: <add inviter to cc>}
     models.User.invite(req.body, req.user).then(response => {
-      req.flash('info', 'invite sent');
-      res.redirect('/users/invite');
-      //res.send(response);
+      req.flash('info', 'invitation to ' + req.body.email + ' sent');
+      res.redirect('/home');
+      console.log(response);
     });
   }],
 
@@ -186,10 +187,23 @@ module.exports = {
       paid: 1
     }, {
       where: { id: req.body.payee }
-    }).then(function(rows) {
+    }).then(rows => {
       // send an email to the user
       res.send(rows);
     });
+
+    models.User.findById(req.body.payee).then(user => {
+      user.update({ paid: 1}).then(rows => {
+        let subject = 'Goalmine Payment Confirmation',
+            template = 'payment_made.hbs',
+            context = {
+              user: user.username
+            };
+        mail.send(user.email, null, subject, template, context, mail_result => {
+          res.send(mail_result);
+        })
+      })
+    }).catch(e => { console.error(e); })
   }],
 
   post_forgot: function(req, res) {
@@ -200,15 +214,17 @@ module.exports = {
       where: [{ username: req.body.username }, { email: req.body.email }]
     }).then(user => {
       if (user) {
-        var reset = utils.getTempName(8);
+        var reset = utils.getTempName(8),
+            now = moment().format('ddd DD MMM, HH:mm');
         user.resetpwd = reset;
         user.save().then(() => {
-          var template = '',
+          var template = 'reset_request.hbs',
               cc = 'admin@euro.goalmine.eu',
               subject = 'Password reset request',
               context = {
                 name: req.body.username,
-                reset: reset
+                reset: reset,
+                date: now
               };
 
           mail.send(req.body.email, cc, subject, template, context, function(mail_result) {
@@ -218,7 +234,7 @@ module.exports = {
           console.log('error', e);
         });
       }
-      req.flash('info', 'If those details were found, you will shortly receive an email explaining how to reset your password');
+      req.flash('info', 'Thank you. If those details were found, you will shortly receive an email explaining how to reset your password');
       res.redirect('/');
     });
     
