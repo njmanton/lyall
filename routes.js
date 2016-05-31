@@ -3,6 +3,7 @@
 
 var models    = require('./models'),
     mail      = require('./mail'),
+    fs        = require('fs'),
     utils     = require('./utils'),
     chalk     = require('chalk'),
     passport  = require('passport');
@@ -12,10 +13,10 @@ var models    = require('./models'),
 
 module.exports = function(app) {
 
-  app.get('/mail', function(req, res) {
-    //mail.getList('players@lcssl.org');
+  /*app.get('/mail', function(req, res) {
+    mail.getList('players@lcssl.org');
     res.send('done');
-  });
+  });*/
 
   // home page
   app.get('/', function(req, res) {
@@ -67,7 +68,7 @@ module.exports = function(app) {
   app.post('/login', 
     passport.authenticate('local', {
       successRedirect: '/home',
-      failureRedirect: '/login',
+      failureRedirect: '/',
       failureFlash: true
     })
   );
@@ -81,7 +82,7 @@ module.exports = function(app) {
   app.get('/auth/facebook/callback', 
     passport.authenticate('facebook', {
       successRedirect: '/home',
-      failureRedirect: '/login'
+      failureRedirect: '/'
     })
   );
 
@@ -94,7 +95,7 @@ module.exports = function(app) {
   app.get('/auth/google/callback',
     passport.authenticate('google', {
       successRedirect: '/home',
-      failureRedirect: '/login',
+      failureRedirect: '/',
       failureFlash: true
     })
   );
@@ -105,18 +106,17 @@ module.exports = function(app) {
     res.redirect('/');
   });
 
-  // about page
-  app.get('/about', function(req, res) {
-    res.render('pages/about', {
-      title: 'About Euro Goalmine'
-    });
-  });
-
   // any other static content
   app.get('/pages/:page', function(req, res) {
-    res.render('pages/' + req.params.page, {
-      title: req.params.page
-    });
+    let path = `views/pages/${req.params.page}.hbs`;
+    try {
+      fs.accessSync(path, fs.F_OK);
+      res.render('pages/' + req.params.page, {
+        title: req.params.page
+      });      
+    } catch (e) {
+      res.status(404).render('errors/404', { title: 'Uh-oh' });
+    }
   });
 
 };
