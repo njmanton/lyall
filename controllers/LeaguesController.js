@@ -3,10 +3,11 @@
 
 var models  = require('../models'),
     folder  = 'leagues',
+    _       = require('lodash'),
     chalk   = require('chalk'),
+    mail    = require('../mail'),
     utils   = require('../utils'),
-    cfg     = require('../config/cfg.js'),
-    bp      = require('body-parser');
+    cfg     = require('../config/cfg.js');
 
 module.exports = {
 
@@ -69,11 +70,14 @@ module.exports = {
       players,
       function(league, pending, players) {
         if (league) {
+          var uid = req.user ? req.user.id : 0;
+          players.map(function(p) { p.sel = (p.uid == uid); });
           res.render(folder + '/view', {
             title: `Goalmine | ${league.name}`,
             league: league,
             table: players,
             pending: pending,
+            member: ~_.findIndex(players, { uid: uid }),
             owner: (req.user && ((req.user == league.organiser) || req.user.admin))
           });          
         } else {
@@ -84,6 +88,12 @@ module.exports = {
   },
 
   get_create: [utils.isAuthenticated, function(req, res) {
+    res.render(folder + '/create', {
+      title: 'Goalmine | New League'
+    });
+  }],
+
+  get_add: [utils.isAuthenticated, function(req, res) {
     res.render(folder + '/create', {
       title: 'Goalmine | New League'
     });
@@ -120,22 +130,31 @@ module.exports = {
   }],
 
   get_id_join: [utils.isAuthenticated, function(req, res, id) {
-    models.League.findById(id).then(function(league) {
+    models.League.findById(id, { include: { model: models.User, attributes: ['email', 'username'] } }).then(league => {
       models.League_User.create({
         user_id: req.user.id,
         league_id: id,
         pending: !league.public
-      }).then(function() {
-
+      }).then(lu => {
         if (league && league.public == 1) {
           req.flash('success', 'You are now a member of this league');
         } else {
           // email organiser
-          req.flash('info', 'Your request has been forwarded to the league organiser');
+          const template = 'league_join.hbs',
+                subject = 'Goalmine League request',
+                context = {
+                  organiser: league.user.username,
+                  user: req.user.username,
+                  league: league.name,
+                  id: league.id
+                };
+          mail.send(league.user.email, false, subject, template, context, done => {
+            console.log('done', done);
+          });
+          req.flash('success', 'Thank you. Your request has been forwarded to the league organiser');
         }
         res.redirect('/leagues/' + id);
-
-      }).catch(function(e) {
+      }).catch(e => {
 
         if (e.name == 'SequelizeUniqueConstraintError') {
           req.flash('error', 'You are already a member or pending member of this league');
@@ -186,7 +205,7 @@ module.exports = {
               id: league.id
             };
         if (decision == 'A') {
-          template = 'league_create_accept';
+          template = 'league_create_accept.hbs';
           let create = models.League_User.create({
             user_id: league.user.id,
             league_id: league.id,
@@ -194,13 +213,13 @@ module.exports = {
           });
           let upd = league.update({ pending: 0 });
           models.sequelize.Promise.all([create, upd]).then(function(p) {
-            //mail.send(league.user.email, false, subject, template, context, function(done) { })
+            mail.send(league.user.email, false, subject, template, context, function(done) { });
             res.send(!!p);
           });
         } else if (decision == 'R') {
-          template = 'league_create_reject';
+          template = 'league_create_reject.hbs';
           league.destroy().then(function(d) {
-            //mail.send(league.user.email, false, subject, template, context, function(done) { })
+            mail.send(league.user.email, false, subject, template, context, function(done) { });
             res.send(!!d);
           });
         }
@@ -251,7 +270,7 @@ module.exports = {
         attributes: ['id', 'name']
       }, {
         model: models.User,
-        attributes: ['username']
+        attributes: ['username', 'email']
       }]
     }).then(function(lu) {
       if (lu) {
@@ -263,15 +282,15 @@ module.exports = {
               id: lu.league_id
             };
         if (decision == 'A') {
-          template = 'league_join_accept';
+          template = 'league_join_accept.hbs';
           lu.update({ pending: 0 }).then(function(ret) {
-            //mail.send()
+            mail.send(lu.user.email, null, subject, template, context, done => {});
             res.send(ret);
           });
         } else if (decision == 'R') {
-          template = 'league_join_reject';
+          template = 'league_join_reject.hbs';
           lu.destroy().then(function(ret) {
-            //mail.send()
+            mail.send(lu.user.email, null, subject, template, context, done => {});
             res.send(ret);
           });
         }
