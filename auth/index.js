@@ -73,8 +73,10 @@ module.exports = function(app) {
           }).then(function(user) {
             if (user) {
               req.flash('success', 'Logged in via Facebook');
+              user.update({ resetpwd: null });
               return done(null, user);
             } else {
+              req.flash('error', 'Can\'t find matching FB user');
               return done(null, false, { message: 'Can\'t find matching FB user' });
             }
           }).catch(function(e) {
@@ -116,6 +118,7 @@ module.exports = function(app) {
             where: { 'google_id': profile.id }
           }).then(function(user) {
             if (user) {
+              user.update({ resetpwd: null });
               req.flash('success', 'Logged in via Google');
               return done(null, user);
             } else {
