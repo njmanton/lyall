@@ -242,7 +242,7 @@ module.exports = {
     
   },
 
-  get_missing: function(req, res) {
+  get_missing: [utils.isAjax, function(req, res) {
     if (req.user) {
       models.User.missing(models, req.user.id).then(function(missing) {
         res.send(missing);
@@ -251,7 +251,7 @@ module.exports = {
       res.sendStatus(403);
     }
 
-  },
+  }],
 
   get_reset_id: function(req, res, id) {
     models.User.findOne({
