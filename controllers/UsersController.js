@@ -14,6 +14,8 @@ module.exports = {
 
   get_index: function(req, res) {
     models.User.table(models).then(function(preds) {
+      let uid = (req.user) ? req.user.id : null;
+      preds.map(p => p.sel = (p.id == uid));
       res.render(folder + '/index', {
         title: 'Leaderboard',
         table: preds
@@ -25,18 +27,18 @@ module.exports = {
     var user = models.User.findById(id);
     var preds = models.Pred.findAll({
       where: { user_id: id },
-      raw: true,
+      //raw: true,
       include: {
         model: models.Match,
         attributes: ['id', 'date', 'result', 'group'],
         include: [{
           model: models.Team,
           as: 'TeamA',
-          attributes: ['id', 'name']
+          attributes: ['id', 'name', 'sname']
         }, {
           model: models.Team,
           as: 'TeamB',
-          attributes: ['id', 'name']
+          attributes: ['id', 'name', 'sname']
         }]
       }
     });
@@ -89,8 +91,8 @@ module.exports = {
     models.User.findAll({
       where: { referredby: inviter },
       raw: true,
-      attributes: ['email', 'validated']
-    }).then((invitees) => {
+      attributes: ['email', 'validated', 'username', 'id']
+    }).then(invitees => {
       res.render(folder + '/invite', {
         title: 'Invite a friend',
         list: invitees
@@ -246,9 +248,52 @@ module.exports = {
         res.send(missing);
       });      
     } else {
-      res.status(404).render('errors/404');
+      res.sendStatus(403);
     }
 
+  },
+
+  get_reset_id: function(req, res, id) {
+    models.User.findOne({
+      where: { resetpwd: id },
+      attributes: ['username', 'email']
+    }).then(u => {
+      if (!u) {
+        req.flash('error', 'Sorry, I didn\'t recognise that code. Please try again');
+        res.redirect('/');
+      } else {
+        res.render(folder + '/reset', {
+          title: 'Goalmine | Reset Password',
+          username: u.username 
+        });
+      }
+    })
+  },
+
+  post_reset_id: function(req, res, id) {
+    models.User.findOne({
+      where: { resetpwd: id, email: req.body.email }
+    }).then(user => {
+      // check there's a user with that reset code and email, and don't rely on
+      // javascript to enforce password complexity
+      if (user && (req.body.pwd.length > 5) && (req.body.pwd == req.body.rpt)) {
+        user.update({
+          password: bCrypt.hashSync(req.body.rpt, bCrypt.genSaltSync(10), null),
+          resetpwd: null
+        }).then(r => {
+          if (r) {
+            req.flash('success', 'Your password has been updated. You can now log in');
+          } else {
+            req.flash('error', 'Sorry, unable to update that account');            
+          }
+          res.redirect('/');
+        })        
+      } else {
+        req.flash('error', 'Sorry, those details were not valid');
+        res.redirect('/');
+      }
+    })
+    
   }
 
 };
