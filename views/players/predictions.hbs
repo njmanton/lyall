@@ -1,29 +1,69 @@
-<section>
+<section class="row" data-uid="{{ user.id }}">
   
-  <h2>Predictions</h2>
-  
-  <p>Hi, {{ user.username }}</p>
-  
-  <table>
-    <caption>Predictions</caption>
-    <thead>
-      <tr>
-        <th>&nbsp;</th>
-        <th>Prediction</th>
-        <th>Result</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each preds }}
-      <tr>
-        <td><a href="/teams/{{ [match.TeamA.id] }}">{{ [match.TeamA.name] }}</a></td>
-        <td>{{ prediction }}</td>
-        <td>{{ [match.result] }}</td>
-        <td><a href="/teams/{{ [match.TeamB.id] }}">{{ [match.TeamB.name] }}</a></td>
-      </tr>
-      {{/each }}
-    </tbody>
-  </table>
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2>My Predictions</h2>
+    
+    {{#each table }}
+    <table class="f32 table table-sm">
+      <caption>{{ groupPrefix @key }}</caption>
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th class="pred">Pred</th>
+          <th class="score">Result</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each this }}
+        <tr>
+          <td class="flag {{ this.teama.sname }}"><a href="/teams/{{ this.teama.id }}">{{ this.teama.name }}</a></td>
+          <td class="pred">
+            {{#if this.expired }}
+              <span class="pred">{{ this.pred }}</span>
+              <input type="radio" name="joker_{{ @../key }}" disabled="disabled" {{#if this.joker }}checked{{/if }}>
+            {{ else }}
+              <input class="score pred" type="text" value="{{ this.pred }}" data-mid="{{ this.mid }}">
+              <input type="radio" data-stage="{{ @../key }}" name="joker_{{ @../key }}" {{#if this.joker }}checked{{/if }} {{#unless this.pred}}disabled="disabled"{{/unless}} >
+            {{/if }}
+          </td>
+          <td class="score">{{ this.result }}</td>
+          <td class="flag {{ this.teamb.sname }}"><a href="/teams/{{ this.teamb.id }}">{{ this.teamb.name }}</a></td>
+        </tr>
+        {{/each }}
+      </tbody>
+    </table>
+    {{/each }}    
+  </div>
+
   
 </section>
+
+<script>
+  $(document).ready(function() {
+
+    $(':text').on('change', function() {
+      var pred = $(this);
+      $.post('/predictions/update', {
+        id: $('section').data('uid'),
+        mid: pred.data('mid'),
+        pred: pred.val()
+      }).done(function(res) {
+        pred.next().attr('disabled', false);
+        console.log('done');
+      })
+    })
+
+    $(':radio').on('change', function() {
+      var radio = $(this);
+      $.post('/predictions/joker', {
+        id: $('section').data('uid'),
+        mid: radio.prev().data('mid'),
+        stage: radio.data('stage')
+      }).done(function(res) {
+        console.log('done');
+      })
+    })
+
+  })
+</script>

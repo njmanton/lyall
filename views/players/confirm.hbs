@@ -1,35 +1,116 @@
-<section>
+<section class="row">
   
-  <h2>Confirm an account</h2>
-  
-  <p>Hi, thanks for clicking on the invite provided by <a href="/users/{{ data.[Referrer.id] }}">{{ data.[Referrer.username] }}</a>, to create an account for Euro 2016 Goalmine.</p>
-  
-  <p>To finish creating your account, just fill in the fields below. Your email address will only be used to send game updates. It will never be passed on to anyone else, and is not visible to any other user.</p>
-  
-  <form action="/users/confirm" method="post">
-    <fieldset>
-      
-      <label for="">Choose a username: *
-        <input type="text" name="username" required id="username" />
-      </label>
-      <div role="alert" id="uid_err"></div>
-      
-      <label for="">Email address: *
-        <input type="email" name="email" id="email" required value="{{ data.email }}" />
-      </label>
-      
-      <label for="">Choose a password: *
-        <input type="password" name="password" required id="password" />
-      </label>
-      <div role="alert" id="pwd_err"></div>
-      
-      <label for="">Repeat password: *
-        <input type="password" name="repeat" required id="repeat" />
-      </label>
-      <div role="alert" id="rpt_err"></div>
-      
-    </fieldset>
-    <input type="hidden" name="code" id="code" value="{{ data.username }}" />
-    <input type="submit" class="tiny button" value="Confirm" />    
-  </form>
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2>Confirm your account</h2>
+    <p>Hi, thanks for clicking on the invite provided by <a href="/users/{{ data.[Referrer.id] }}">{{ data.[Referrer.username] }}</a>, to create an account for Euro 2016 Goalmine.</p>
+    <p>To finish creating your account, please fill in the fields below. Your email address will only be used to send game updates. It will never be passed on to anyone else, and is only visible to other users when you send them a game invite.</p>
+    <form action="/users/confirm" id="confirmAccount" method="post">
+      <fieldset class="form-group">
+        <input class="form-control" autocomplete="off" placeholder="username (max 25 chars)" type="text" name="username" required id="username" />
+        <span role="alert" class="intrainput" id="user-not-valid"></span><br />
+        <input class="form-control" type="email" placeholder="email" name="email" id="email" required value="{{ data.email }}" />
+        <span role="alert" class="intrainput" id="email-not-valid"></span><br />
+        <input class="form-control" placeholder="password (min 6 chars)" type="password" name="password" required id="password" />
+        <span role="alert" class="intrainput" id="password-not-valid"></span><br />
+        <input class="form-control" type="password" placeholder="repeat password" name="repeat" required id="repeat" />
+        <span role="alert" class="intrainput" id="password-not-repeated"></span><br />
+      </fieldset>
+      <input type="hidden" name="code" id="code" value="{{ data.username }}" />
+      <input type="submit" id="confirm-submit" class="btn btn-primary" value="Confirm" />
+    </form>
+  </div>
 </section>
+
+<script>
+  $(document).ready(function() {
+
+    $('#confirm-submit').attr('disabled', 'disabled');
+
+    var user = $('#username'),
+        email = $('#email'),
+        pwd = $('#password'),
+        rpt = $('#repeat'),
+        uid_err = $('#user-not-valid'),
+        email_err = $('#email-not-valid'),
+        rpt_err = $('#password-not-repeated');
+
+    var checkForm = function() {
+      var state = (uid_err.hasClass('success') && !email_err.hasClass('error') && rpt_err.hasClass('success') && user.val().length >= 3);
+      if (state) {
+        $('#confirm-submit').removeAttr('disabled');
+      } else {
+        $('#confirm-submit').attr('disabled', 'disabled');
+      }
+    };
+
+    rpt.on('blur', function() {
+      if (rpt.val() != pwd.val()) {
+        rpt_err
+          .addClass('err')
+          .removeClass('success')
+          .html('&ne;')
+          .show();
+      } else {
+        rpt_err
+          .addClass('success')
+          .removeClass('err')
+          .html('&#10003;')
+          .show();
+      }
+      checkForm();
+    })
+
+    user.on('keyup', function() {
+      if (user.val().length > 2) {
+        uid_err.html(' <span>spinner</span>');
+        $.get('/users/available/' + user.val())
+          .done(function(res) {
+            if (res) {
+              uid_err
+                .removeClass('err')
+                .addClass('success')
+                .html('&#10003;')
+                .show();
+            } else {
+              uid_err
+                .addClass('err')
+                .removeClass('success')
+                .html('taken')
+                .show();
+            }
+            checkForm();
+        });
+      } else {
+        uid_err.hide();
+      }
+    })
+
+    email.on('keyup', function() {
+      var add = $(this).val(),
+          re = /\S+@\S+\.\S+/;
+
+      if (add.match(re)) {
+        $.get('/users/available/' + add)
+          .done(function(res) {
+            if (res) {
+              email_err
+                .removeClass('error')
+                .addClass('success')
+                .html('&#10003;')
+                .show()
+            } else {
+              email_err
+                .addClass('error')
+                .removeClass('success')
+                .html('taken')
+                .show()
+            }
+          })
+      } else {
+        email_err.show().addClass('error').html('!!');
+      }
+      checkForm();
+
+    })
+  })
+</script>

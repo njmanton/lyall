@@ -1,23 +1,21 @@
-<section>
+<section class="row">
   
-  <h2>Add a new League</h2>
-  <p>Complete the form below to request a new league. The request must be approved by an administrator before it will be visible. Once the league has been created, you will be set as the organiser.</p>
-  <p>If you set the league to be public, anyone can join the league.</p>
-  <p>The default setting is private which means you, as the administrator, will need to manage any requests to join the league. You will see a list of all requests on your home page.</p>
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2>Add a new League</h2>
+    <p>Complete the form below to request a new league. The request must be approved by an administrator before it will be visible. Once the league has been created, you will be set as the organiser.</p>
+    <p>If you set the league to be public, anyone can join the league.</p>
+    <p>The default setting is private which means you, as the administrator, will need to manage any requests to join the league. You will see a list of all requests on your home page.</p>
 
-  <form action="/leagues/create" method="post" id="NewLeague">
-    <fieldset>
-      <label for="name">Name of league: 
-        <input type="text" required name="name" id="name" placeholder="Name of league" />
-      </label>
-      <label for="desc">Description: <span id="descchar"></span>
-        <textarea name="description" id="desc" cols="40" rows="10" placeholder="Enter a description here (max 140 chars)"></textarea>
-      </label>
-      <label for="public">Public:
-        <input type="checkbox" id="public" name="public" value="1" />
-      </label>
-    </fieldset>
-    <input type="submit" class="" value="Submit" />
-  </form>
+    <form action="/leagues/create" method="post" id="newLeague">
+      <fieldset>
+        <input type="text" required name="name" id="name" placeholder="Name of league" /><br />
+        <textarea name="description" id="desc" cols="40" rows="10" placeholder="Enter a description here (max 140 chars)"></textarea><span id="descchar"></span><br />
+        <label for="public">Public:
+          <input type="checkbox" id="public" name="public" value="1" />
+        </label><br />
+        <input type="submit" class="btn btn-primary" value="Submit" />
+      </fieldset>
+    </form>
+  </div>
 
 </section>

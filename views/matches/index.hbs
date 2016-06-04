@@ -1,28 +1,32 @@
-<section>
+<section class="row">
   
-  {{#each matches }}
-  <table>
-  <caption>Group {{ @key }}</caption>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Venue</th>
-      <th>&nbsp;</th>
-      <th>Score</th>
-      <th>&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each this }}
-    <tr>
-      <td>{{ this.date }}</td>
-      <td>{{ this.[venue.stadium] }}</td>
-      <td>{{ this.[TeamA.name] }}</td>
-      <td>{{ result }}</td>
-      <td>{{ this.[TeamB.name] }}</td>
-    </tr>
-    {{/each }}
-  </tbody>
-</table>
-  {{/each }}
+  <div class="col-sm-10 col-md-9 col-md-offset-1">
+    {{#each matches }}
+    <table class="table table-sm">
+      <caption>{{ groupPrefix @key }}</caption>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th class="hide-sm">Venue</th>
+          <th>&nbsp;</th>
+          <th>Score</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each this }}
+        <tr>
+          <td>{{ fdate }}</td>
+          <td class="hide-sm"><a href="/venues/{{ venue.id }}">{{ venue.city }}</a></td>
+          <td><a href="/teams/{{ TeamA.id }}">{{ TeamA.name }}</a></td>
+          <td class="score">{{ result }}</td>
+          <td><a href="/teams/{{ TeamB.id }}">{{ TeamB.name }}</a></td>
+          <td><a href="/matches/{{ id }}"><i title="View match" class="fa fa-search" aria-hidden="true"></i></a></td>
+        </tr>
+        {{/each }}
+      </tbody>
+    </table>
+    {{/each }}    
+  </div>
+
 </section>

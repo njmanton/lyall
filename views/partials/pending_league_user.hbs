@@ -1,0 +1,23 @@
+{{#if pending }}
+<table id="pending" class="table table-sm">
+  <caption>Pending requests to join this league (admin/league organisers only)</caption>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Decision</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each pending }}
+    <tr>
+      <td><a href="/users/{{ user.id }}">{{ user.username }}</a></td>
+      <td>
+        <button title="Accept" class="decision btn btn-success" data-decision="A" data-uid="{{ user.id }}">A </button>
+        <button title="Reject" class="decision btn btn-danger" data-decision="R" data-uid="{{ user.id }}">R </button>
+      </td>
+    </tr>
+    {{/each }}
+  </tbody>
+</table>
+
+{{/if }}

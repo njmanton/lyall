@@ -1,8 +1,36 @@
-<header>
-  {{#if user }}
-    <a href="/home">{{ user.username }}</a>
-    <a href="/logout">Logout</a>
-  {{ else }}
-    <a href="/login">Login</a>
-  {{/if }}
+<header role="navigation">
+  <nav>
+    <div id="left" style="float: left; position: relative;">
+      <ul>
+        <li>
+          <a href="/">HOME</a>
+        </li>
+      </ul>
+    </div>
+    <div id="right" style="float: right; position: relative;">
+      {{#if user }}
+      <ul>
+        <li>
+          <a href="/home" title="Home">
+          {{#if user.facebook_id }}
+            <img src="http://graph.facebook.com/{{ user.facebook_id }}/picture?type=normal" alt="image" height="30">
+          {{ else }}
+            <span class="fa fa-user" style="font-size: 1.4rem;"></span>
+          {{/if }}
+          {{ user.username }}
+          </a>          
+        </li>
+        <li>
+          <a href="/logout">LOGOUT</a>
+        </li>
+      </ul>
+      {{ else }}
+      <ul>
+        <li>
+          <a href="/#login">LOGIN</a>
+        </li>
+      </ul>
+      {{/if }}    
+    </div>
+  </nav>
 </header>

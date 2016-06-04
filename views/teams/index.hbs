@@ -1,32 +1,25 @@
-<table class="f32">
-  <thead>
-    <tr>
-      <th>Team</th>
-      <th>Group</th>
-      <th>Ranking</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each teams}}
-    <tr>
-      <td class="flag {{ sname }}"><a href="/teams/{{ id }}">{{ name }}</a></td>
-      <td>{{ group }}</td>
-      <td>{{ ranking }}</td>
-    </tr>
-    {{/each}}
-  </tbody>
+<section class="row">
   
-</table>
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <table class="f32 table table-sm">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Group</th>
+          <th>Ranking</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each teams}}
+        <tr>
+          <td class="flag {{ sname }}"><a href="/teams/{{ id }}">{{ name }}</a></td>
+          <td>{{ group }}</td>
+          <td>{{ ranking }}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+      
+    </table>    
+  </div>
 
-<style>
-  .flag > a {
-    padding-left: 3em;
-    min-width: 20em;
-    
-  }
-
-  .flag {
-    min-width: 20em;
-    padding: 5px 0;
-  }
-</style>
+</section>

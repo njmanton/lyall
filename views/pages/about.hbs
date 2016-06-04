@@ -1,17 +1,16 @@
-<section>
+<section class="row">
   
-  <h2>About</h2>
-  <p>Some stuff here</p>
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
 
-  <a href="/leagues/2/join">join</a>
+    <h2>About</h2>
+    <p>GoalMine is a web-based football prediction game. For each match, predict what you think the final score will be. The closer you are to the actual result, the more points you score. Play your joker on the score you think is most likely and double your points. The player with the most points at the end of the tournament is the winner.</p>
+
+    <p>Goalmine has been rewritten for the 2016 Euros. Predict the results of each of the 36 group games, and each of the 15 knock-out matches (unlike the World Cup, the Euros don't have a pointless 3/4 place play off game). As with the 2014 World Cup and 2012 Euros, you can create your own user leagues for you and your friends.</p>
+
+    <p>The game costs £2.00 to play for the tournament. The winner after all games have been played will receive <strong>80%</strong> of the pot. The remaining <strong>20%</strong> will go to a charity picked by the person with the lowest score (that makes a prediction on each game). If you want to play for bigger stakes, find (or create) a user league with its own entry.</p>
+
+    <p>The game is invitation-only &mdash; you must be invited by an existing member to create an account and play</p>
+  
+  </div>
   
 </section>
-
-<script>
-  $(document).ready(function() {
-    $.get('/leagues/1/pending')
-      .done(function(data) {
-        console.log(data);
-      })
-  })
-</script>

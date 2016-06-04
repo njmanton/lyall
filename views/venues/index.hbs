@@ -1,19 +1,27 @@
-<table>
-  <thead>
-    <tr>
-      <th>Team</th>
-      <th>City</th>
-      <th>Capacity</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each venues}}
-    <tr>
-      <td><a href="/venues/{{ id }}">{{ stadium }}</a></td>
-      <td>{{ city }}</td>
-      <td>{{ capacity }}</td>
-    </tr>
-    {{/each}}
-  </tbody>
+<section class="row">
   
-</table>
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2>Venues</h2>
+
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>City</th>
+          <th>Capacity</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each venues}}
+        <tr>
+          <td><a href="/venues/{{ id }}">{{ stadium }}</a></td>
+          <td>{{ city }}</td>
+          <td>{{ capacity }}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+      
+    </table>    
+  </div>
+
+</section>

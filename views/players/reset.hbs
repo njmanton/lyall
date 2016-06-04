@@ -1,0 +1,65 @@
+<section class="row">
+  <h2>Reset your password</h2>
+  <p>You can now reset your password using the form below. Please enter the password associated with your account, and choose a new password (minimum 6 characters).</p>
+  <form action="" method="post" id="resetPassword">
+    <fieldset class="form-group">
+      <input type="email" placeholder="email" value="" required autocomplete="off" id="resetemail" name="email" /><br />
+      <input type="password" placeholder="new password (min 6 chars)" value="" pattern=".{6,}" required autocomplete="off" id="resetpwd" name="pwd" /><span id="password-val" class="intrainput"></span> <br />
+      <input type="password" placeholder="repeat password" required pattern=".{6,}" autocomplete="off" id="rpt" name="rpt" /><span id="rpt-val" class="intrainput"></span><br />
+      <input type="submit" id="reset-submit" disabled="disabled" class="btn btn-primary" value="Update" />      
+    </fieldset>
+  </form>
+</section>
+
+<script>
+  $(document).ready(function() {
+
+    var pwd_val = $('#password-val'),
+        rpt_val = $('#rpt-val');
+
+    var checkForm = function() {
+      var state = (pwd_val.hasClass('success') && rpt_val.hasClass('success'));
+      if (state) {
+        $('#reset-submit').removeAttr('disabled');
+      } else {
+        $('#reset-submit').attr('disabled', 'disabled');
+      }
+    };
+
+    $('#resetpwd').on('blur', function() {
+      var fld = $(this).val();
+      if (fld.length >= 6) {
+          $('#password-val')
+            .removeClass('err')
+            .addClass('success')
+            .html('&#10003;')
+            .show();
+      } else {
+          $('#password-val')
+            .removeClass('success')
+            .addClass('err')
+            .text('!!')
+            .show();
+      }
+      checkForm();
+    })
+    $('#rpt').on('blur', function() {
+      var fld = $(this).val();
+      var pwd = $('#resetpwd').val();
+      if (fld == pwd) {
+          $('#rpt-val')
+            .removeClass('err')
+            .addClass('success')
+            .html('&#10003;')
+            .show();
+      } else {
+          $('#rpt-val')
+            .removeClass('success')
+            .addClass('err')
+            .html('&ne;')
+            .show();
+      } 
+      checkForm();     
+    })
+  })
+</script>

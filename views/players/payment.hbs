@@ -1,0 +1,30 @@
+<section class="row">
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2>Add a Payment</h2>    
+    {{#each users }}
+      <div>
+        <span>{{ username }}</span>
+        {{#if paid }}
+        <span>✔</span>
+        {{ else }}
+        <button class="btn btn-sm btn-primary payment" data-uid="{{ id }}">Mark paid</button>
+        {{/if }}
+      </div>
+    {{/each }}    
+  </div>
+</section>
+
+<script>
+  $(document).ready(function() {
+    $('button').on('click', function() {
+      var btn = $(this);
+      $.post('/users/payment', {
+        payee: btn.data('uid')
+      }).done(function(rows) {
+        if (rows) {
+          btn.replaceWith('<span>✔</span>');
+        }
+      })
+    })
+  })
+</script>

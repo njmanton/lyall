@@ -1,21 +1,34 @@
-<div class="flash success">
-  {{#each flash_success }}{{ this }}{{/each }}
-</div>
-<div class="flash error">
-  {{#each flash_error }}{{ this }}{{/each }}
-</div>
-<div class="flash info">
-  {{#each flash_info }}{{ this }}{{/each }}
-</div>
+<div class="flash">
+  
+  {{#if flash_success }}
+  <div class="alert alert-success alert-dismissable fade in" role="alert">
+    <span class="alert-icon"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
+    <span class="alert-text">{{#each flash_success }}{{ this }}{{/each }}</span>
+    <button class="close" data-dismiss="alert" aria-label="close">
+      <span aria-hidden="true">&times;</span>
+    </button>      
+  </div>
+  {{/if }}
+  
+  {{#if flash_error }}
+  <div class="alert alert-danger alert-dismissable fade in" role="alert">
+    <span class="alert-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+    <span class="alert-text">{{#each flash_error }}{{ this }}{{/each }}</span>
+    <button class="close" data-dismiss="alert" aria-label="close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {{/if }}
+  
+  {{#if flash_info }}
+  <div class="alert alert-info alert-dismissable fade in" role="alert">
+    <span class="alert-icon"><i class="fa fa-info-circle" aria-hidden="true"></i></span>
+    <span class="alert-text">{{#each flash_info }}{{ this }}{{/each }}</span>
+    <button class="close" data-dismiss="alert" aria-label="close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {{/if }}
+  
+</div> 
 
-<style>
-  .success {
-    background-color: #6f6;
-  }
-  .error {
-    background-color: #f33;
-  }
-  .info {
-    background-color: #66f;    
-  }
-</style>

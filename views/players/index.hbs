@@ -1,29 +1,32 @@
-<section>
+<section class="row">
   
-  <h2>Leaderboard</h2>
-  
-  <table>
-    <thead>
-      <tr>
-        <th>Place</th>
-        <th>Player</th>
-        <th>Points</th>
-        <th>CS</th>
-        <th>CD</th>
-        <th>CR</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each table }}
-      <tr>
-        <td></td>
-        <td><a href="/users/{{ id }}">{{ name }}</a></td>
-        <td>{{ points }}</td>
-        <td>{{ cs }}</td>
-        <td>{{ cd }}</td>
-        <td>{{ cr }}</td>
-      </tr>
-      {{/each }}
-    </tbody>
-  </table>
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2>Overall Leaderboard</h2>
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th>Player</th>
+          <th><acronym title="Correct Score">CS</acronym></th>
+          <th><acronym title="Correct Difference">CD</acronym></th>
+          <th><acronym title="Correct Result">CR</acronym></th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each table }}
+        <tr class="{{#if sel }}selected{{/if }}">
+          <th scope="row">{{ rank }}</td>
+          <td><a href="/users/{{ id }}">{{ name }}</a></td>
+          <td>{{ cs }}</td>
+          <td>{{ cd }}</td>
+          <td>{{ cr }}</td>
+          <td>{{ points }}</td>
+        </tr>
+        {{/each }}
+      </tbody>
+    </table>    
+  </div>
+
 </section>

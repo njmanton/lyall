@@ -1,45 +1,45 @@
-<section>
+<section class="row">
   
-  {{#unless venue }}
-  <p>Venue Not Found!</p>
-  {{ else }}
-  <h2>{{ venue.stadium }}</h2>
-  <p>City: {{ venue.city }}</p>
-  <p>Capacity: {{ venue.capacity }}</p>
-  
-  <table>
-    <caption>Matches</caption>
-    <thead>
-      <tr>
-        <th>id</th>
-        <th>date</th>
-        <th>stage</th>
-        <th>&nbsp;</th>
-        <th>Result</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each matches }}
-      <tr>
-        <td><a href="/matches/{{ id }}">{{ id }}</a></td>
-        <td>{{ date }}</td>
-        <td>{{ stage }}</td>
-        <td>
-          {{#if teama.id }}<a href="/teams/{{ teama.id }}">{{/if}}
-          {{ teama.name }}
-          {{#if teama.id}}</a>{{/if}}
-        </td>
-        <td>{{ result }}</td>
-        <td>
-          {{#if teamb.id }}<a href="/teams/{{ teamb.id }}">{{/if}}
-          {{ teamb.name }}
-          {{#if teamb.id}}</a>{{/if}}
-        </td>
-      </tr>
-      {{/each }}
-    </tbody>
-  </table>
-  {{/unless }}
+  <div class="col-sm-10 col-md-2 col-md-offset-2">
+    <h2>{{ venue.stadium }}</h2>
+    <p>{{ venue.city }}</p>
+    <p>Capacity: {{ venue.capacity }}</p>    
+  </div>
+
+  <div class="col-sm-10 col-md-6">
+    <table class="table table-sm">
+      <caption>Matches</caption>
+      <thead>
+        <tr>
+          <th>date</th>
+          <th>stage</th>
+          <th>&nbsp;</th>
+          <th>Result</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each matches }}
+        <tr>
+          <td>{{ date }}</td>
+          <td>{{ groupPrefix stage }}</td>
+          <td>
+            {{#if teama.id }}<a href="/teams/{{ teama.id }}">{{/if}}
+            {{ teama.name }}
+            {{#if teama.id}}</a>{{/if}}
+          </td>
+          <td>{{ result }}</td>
+          <td>
+            {{#if teamb.id }}<a href="/teams/{{ teamb.id }}">{{/if}}
+            {{ teamb.name }}
+            {{#if teamb.id}}</a>{{/if}}
+          </td>
+          <td><a href="/matches/{{ id }}"><i title="View match" class="fa fa-search" aria-hidden="true"></i></a></td>
+        </tr>
+        {{/each }}
+      </tbody>
+    </table>    
+  </div>
+
   
 </section>

@@ -1,36 +1,65 @@
-<section>
-  
-  {{#unless team }}
-  <p>Team Not Found!</p>
-  {{ else }}
-  <h2>{{ team.name }}</h2>
-  <p>Group: {{ team.group }}</p>
-  <img style="height: 6em;" src="/img/flags/{{ team.sname }}.svg" alt="{{ team.name }} Flag" />
-  {{#each matches }}
-  <table>
-    <caption>Group {{ @key }}</caption>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Venue</th>
-        <th>Opponent</th>
-        <th>Score</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each this }}
-      <tr>
-        <td>{{ this.date }}</td>
-        <td><a href="/venues/{{ this.venue.id }}">{{ this.venue.stadium }}</a></td>
-        <td class="flag {{ this.opponent.flag }}"><a href="/teams/{{ this.opponent.id }}">{{ this.opponent.name }}</a></td>
-        <td>{{ this.result }}</td>
-        <td><a href="/matches/{{ this.id }}">view</a></td>
-      </tr>
-      {{/each }}
-    </tbody>
-  </table>
-  {{/each }}
-  {{/unless }}
-  
+<section class="row">
+
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2>{{ team.name }}</h2>
+    <img style="height: 6em;" src="/img/flags/{{ team.sname }}.svg" alt="{{ team.name }} Flag" />
+    {{#each matches }}
+    <table class="table table-sm">
+      <caption>{{ groupPrefix @key }}</caption>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Venue</th>
+          <th>Opponent</th>
+          <th>Result</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each this }}
+        <tr>
+          <td>{{ this.date }}</td>
+          <td><a href="/venues/{{ this.venue.id }}">{{ this.venue.stadium }}</a></td>
+          <td class="flag {{ this.opponent.flag }}"><a href="/teams/{{ this.opponent.id }}">{{ this.opponent.name }}</a></td>
+          <td>{{ this.result }}</td>
+          <td><a href="/matches/{{ this.id }}"><i title="view game" class="fa fa-search" aria-hidden="true"></i></a></td>
+        </tr>
+        {{/each }}
+      </tbody>
+    </table>
+    {{/each }}
+
+    <table class="table table-sm">
+      <caption>{{ groupPrefix team.group }} Table</caption>
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Pl</th>
+          <th>W</th>
+          <th>D</th>
+          <th>L</th>
+          <th>GF</th>
+          <th>GA</th>
+          <th>GD</th>
+          <th>Pts</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each table }}
+        <tr class="{{#if sel }}selected{{/if }}">
+          <td><a href="/teams/{{ id }}">{{ name }}</a></td>
+          <td>{{ pl }}</td>
+          <td>{{ w }}</td>
+          <td>{{ d }}</td>
+          <td>{{ l }}</td>
+          <td>{{ gf }}</td>
+          <td>{{ ga }}</td>
+          <td>{{ gd }}</td>
+          <td>{{ pts }}</td>
+        </tr>
+        {{/each }}
+      </tbody>
+    </table>  
+  </div>
+
 </section>

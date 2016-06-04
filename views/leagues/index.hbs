@@ -1,23 +1,77 @@
-<section>
+<section class="row">
   
-  <h2>User Leagues</h2>
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2 data-admin="{{ admin }}">User Leagues</h2>
+    
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>League</th>
+          <th>Organiser</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each leagues }}
+        <tr>
+          <td><a href="/leagues/{{ id }}">{{ name }}</a>{{#unless public }} *{{/unless }}</td>
+          <td><a href="/users/{{ [user.id] }}">{{ [user.username] }}</a></td>
+        </tr>
+        {{/each }}
+      </tbody>
+    </table>
+    <p>Leagues marked with an asterisk are private.</p>
+    <p>You can <a href="/leagues/add">request</a> your own user league.</p>
+    
+    {{#if pending }}
+    <h3>Pending leagues</h3>
+    <table id="pending" class="table table-sm">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Organiser</th>
+          <th>Decision</th>
+        </tr>
+      </thead>
+      {{#each pending }}
+      <tr>
+        <td>{{ name }}</td>
+        <td>{{ description }}</td>
+        <td>{{ user.username }}</td>
+        <td><button class="decision btn btn-success" data-decision="A" data-lid="{{ id }}">A</button><button class="decision btn btn-danger" data-decision="R" data-lid="{{ id }}">R</button></td>
+      </tr>
+      {{/each}}
+    </table>
+    {{/if }}    
+  </div>
+
   
-  <table>
-    <thead>
-      <tr>
-        <th>League</th>
-        <th>Organiser</th>
-        <th>Type</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each data }}
-      <tr>
-        <td><a href="/leagues/{{ id }}">{{ name }}</a></td>
-        <td><a href="/users/{{ [user.id] }}">{{ [user.username] }}</a></td>
-        <td>{{ public }}</td>
-      </tr>
-      {{/each }}
-    </tbody>
-  </table>
 </section>
+
+<script>
+  $(document).ready(function() {
+    $('#pending').on('click', '.decision', function(e) {
+      var btn = $(this),
+          row = btn.parent().parent(),
+          dec = btn.data('decision'),
+          lid = btn.data('lid');
+
+      $.post('/leagues/pending', { lid: lid, decision: dec })
+        .done(function(res) {
+          // response is updated rows
+          console.log(res);
+          // replace row with success message and fade it out
+          row.empty().append();
+        })
+        .fail(function(e) {
+          // if the update failed
+          // replace row wth error message and fade it out
+          row.empty().append();
+        })
+        .always(function() {
+          // something that always gets done regardless
+        })
+
+    })
+  })
+</script>

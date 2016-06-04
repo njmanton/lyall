@@ -1,29 +1,81 @@
-<section>
+<section class="row">
   
-  <h2>{{ data.username }}</h2>
-  
-  <table>
-    <caption>Predictions</caption>
-    <thead>
-      <tr>
-        <th>&nbsp;</th>
-        <th>Prediction</th>
-        <th>Result</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each preds }}
-      <tr>
-        <td><a href="/teams/{{ [match.TeamA.id] }}">{{ [match.TeamA.name] }}</a></td>
-        <td>{{ prediction }}</td>
-        <td>{{ [match.result] }}</td>
-        <td><a href="/teams/{{ [match.TeamB.id] }}">{{ [match.TeamB.name] }}</a></td>
-      </tr>
-      {{/each }}
-    </tbody>
-  </table>
-  <a href="/predictions">My Predictions</a>
-  <a href="/users/invite">Invite a friend</a>
-  
+  <div class="col-sm-10 col-md-3 col-md-offset-2">
+    <h2 data-uid="{{ data.id }}">{{ data.username }}</h2>
+    {{#if data.facebook_id }}
+    <img src="http://graph.facebook.com/{{ data.facebook_id }}/picture?type=normal" alt="image">
+    {{ else }}
+    {{/if }}  
+
+    {{#if home }}
+      <!-- additional options for logged-in user -->
+      <div id="todo"></div>
+      <h3>User options</h3>
+      <ul>
+        {{#unless data.facebook_id }}
+        <li><a href="/auth/facebook">Link account to Facebook</a></li>
+        {{/unless}}
+        {{#unless data.google_id }}      
+        <li><a href="/auth/google">Link account to Google</a></li>
+        {{/unless}}         
+        <li><a id="pred" href="/predictions">My Predictions</a></li>
+        <li><a href="/leagues/add">Create a new league</a></li>
+        <li><a href="/users/invite">Invite a friend</a></li>
+        {{#if data.admin }}
+        <li><a href="/users/payment">Manage Payments</a> (admin)</li>
+        {{/if}}
+      </ul>
+      <section>
+        <h3>User Leagues</h3>
+        <ul id="user_leagues"></ul>
+      </section>
+    {{/if }}  
+  </div>
+
+  <div class="col-sm-10 col-md-5">
+    <table class="table table-sm f32">
+      <caption>Predictions</caption>
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th class="score">Pred</th>
+          <th class="score">Result</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each preds }}
+        <tr>
+          <td class="flag {{ match.TeamA.sname }}"><a href="/teams/{{ match.TeamA.id }}">{{ match.TeamA.name }}</a></td>
+          <td class="score pts-{{ points }} {{#if joker }}joker{{/if }}">{{ prediction }}</td>
+          <td class="score">{{ match.result }}</td>
+          <td class="flag {{ match.TeamB.sname }}"><a href="/teams/{{ match.TeamB.id }}">{{ match.TeamB.name }}</a></td>
+        </tr>
+        {{/each }}
+      </tbody>
+    </table>    
+  </div>
+
 </section>
+
+<script>
+  $(document).ready(function() {
+    var uid  = $('h2').data('uid'),
+        list = $('#user_leagues'),
+        todo = $('#todo');
+
+    $.get('/users/' + uid + '/leagues').done(function(leagues) {
+      $.each(leagues, function(k, v) {
+        list.append('<li><a href="leagues/' + v['league.id'] + '">' + v['league.name'] + '</a></li>');
+      }) 
+    })
+
+    $.get('/users/missing').done(function(missing) {
+      $.each(missing, function(k, v) {
+        var grp = (v.stage <= 'G') ? 'Group ' + v.stage : v.stage;
+        todo.append('<div><span>' + grp + ': </span><span>' + v.missing + ' prediction(s) to make</span></div>');
+      })
+    })
+
+  })
+</script>
