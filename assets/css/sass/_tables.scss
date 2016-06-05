@@ -1,0 +1,134 @@
+/* styles for table elements */
+
+$cs: #6f6;
+$cd: yellow;
+$cr: blue;
+$wj: #c99;
+
+$team: #444;
+$goal: #666;
+
+// styles for highlighting prediction scores
+.pts-1, .pts-2 {
+  background-color: $cr;
+}
+.pts-3, .pts-6 {
+  background-color: $cd;
+}
+.pts-5, .pts-10 {
+  background-color: $cs;
+}
+.pts--1 {
+  background-color: $wj;
+}
+
+.joker {
+  background-image: url(../img/joker_icon.png);
+  background-repeat: no-repeat;
+  background-position: right top;
+}
+
+.result {
+  border-collapse: separate;
+  border-spacing: 3px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 2rem auto;
+  caption {
+    font-size: 1rem;
+    text-align: center;
+  }
+  .team {
+    width: 20rem;
+    background-color: $team;
+    text-align: center;
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      color: #eee;
+      line-height: 3.5rem;
+    }
+    a:hover {
+      background-color: lighten($team, 10%);
+    }
+  }
+  .goal {
+    width: 5rem;
+    background-color: $goal;
+    color: #eee;
+    text-align: center;
+  }
+  .flag {
+    height: 3.5rem;
+    img {
+      height: 100%;
+    }
+  }
+}
+
+.score {
+  width: 3rem;
+  text-align: center;
+}
+
+td.pred {
+  width: 4rem;
+  min-width: 4rem !important;
+  span.pred {
+    width: 2.2rem;
+    display: inline-block;
+    text-align: center;
+  }
+}
+
+caption {
+  caption-side: top;
+  text-align: center;
+  padding-bottom: 0;
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.hide-sm {
+  display: table-cell;
+}
+
+tr.selected td, tr.selected th {
+  background-color: darken(#e8e8e8, 20%);
+}
+
+.f32 .flag > a {
+  padding-left: 3em;
+  min-width: 20em;
+  
+}
+
+.f32 .flag {
+  min-width: 12rem;
+  padding: 5px 0;
+}
+
+.f32 tr td {
+  max-height: 22px;
+  overflow: hidden;
+}
+
+@keyframes fin {
+  from {background-color: #7f7;}
+  to {background-color: #e8e8e8;}
+}
+
+@-webkit-keyframes fin {
+  from {background-color: #7f7;}
+  to {background-color: #e8e8e8;}
+}
+
+.ajaxChange td {
+  animation-name: fin;
+  animation-duration: 3s;
+  -webkit-animation-name: fin;
+  -webkit-animation-duration: 3s;
+}

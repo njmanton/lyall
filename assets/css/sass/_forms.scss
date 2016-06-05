@@ -1,0 +1,58 @@
+/* styles for form elements */
+
+input.pred {
+  width: 2.2em;
+  text-align: center;
+  padding: 0;
+}
+
+.login input, .btn-social {
+  margin: 2px;
+  width: 90%;
+}
+.login input {
+  padding-left: 0.3rem;
+  height: 38px;
+  border-radius: 0.25rem;
+  border-style: none;
+  color: #222;
+}
+
+#forgotPassword input, 
+#resetPassword input, 
+#confirmAccount input,
+#sendInvite input:not([type='checkbox']) {
+  padding-left: 0.3rem;
+  display: inline-block;
+  height:38px;
+  border-radius: 0.25rem;
+  border-style: none;
+  margin: 2px;
+  width: 40%;
+}
+
+#sendInvite input:not([type='checkbox']),
+#sendInvite textarea,
+#newLeague input:not([type='checkbox']),
+#newLeague textarea {
+  width: 60%;
+  border-radius: 0.25rem;
+  border-style: none;
+  margin: 2px;
+  padding-left: 0.3rem;
+  display: inline-block;
+}
+
+.intrainput {
+  display: inline-block;
+  margin-left: -3.2rem;
+  font-weight: bold;
+  min-width: 2.6rem;
+  text-align: right;
+  &.success {
+    color: green;
+  }
+  &.err {
+    color: red;
+  }
+}
