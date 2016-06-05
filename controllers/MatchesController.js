@@ -7,7 +7,6 @@ var models  = require('../models'),
     ga      = require('group-array'),
     utils   = require('../utils'),
     cfg     = require('../config/cfg'),
-    util    = require('util'),
     chalk   = require('chalk');
 
 module.exports = {
@@ -36,7 +35,7 @@ module.exports = {
         attributes: ['id', 'stadium', 'city']
       }]
     }).then(data => {
-      data.map(m => { m.fdate = moment(m.date).format('ddd DD MMM, HH:mm'); });
+      data.map(m => { m.fdate = moment(m.date).format('DD MMM, ha'); });
       res.render(folder + '/index', {
         title: 'Goalmine | Matches',
         matches: ga(data, 'stage')
@@ -88,10 +87,11 @@ module.exports = {
           if (match.stage.length > 1) {
             placeholders = match.group.split('v');
           }
-          let then = moment(match.date).startOf('day');
+          let then = moment(match.date).startOf('day').add(12, 'h');
           match.ta = (match.TeamA) ? match.TeamA.name : placeholders[0];
           match.tb = (match.TeamB) ? match.TeamB.name : placeholders[1];
-          match.fdate = moment(match.date).format('ddd DD/MM HH:mm');
+          match.scores = (match.result) ? match.result.split('-') : ['-', '-'];
+          match.fdate = moment(match.date).format('ddd DD/MM ha');
           match.goals.map(m => { m.home = (match.TeamA.id == m.team_id) });
           res.render(folder + '/view', {
             title: `Goalmine |  ${match.ta} vs ${match.tb}`,
@@ -139,36 +139,43 @@ module.exports = {
   }],
 
   get_id_heatmap: [utils.isAjax, function(req, res, id) {
-    if (id < 1 || id > 51 || !util.isNumber(id)) { res.sendStatus(404); return false; }
+    let mid = (id * 1);
+    if (mid < 1 || mid > 51 || isNaN(mid)) { res.sendStatus(404); return false; }
 
-    let qry = 'SELECT prediction, COUNT(id) AS cnt FROM predictions WHERE match_id=' + id + ' GROUP BY prediction';
+    let qry = 'SELECT prediction, COUNT(id) AS cnt FROM predictions WHERE match_id=' + mid + ' GROUP BY prediction';
     var preds = models.sequelize.query(qry, { type: models.sequelize.QueryTypes.SELECT });
     var result = models.Match.findById(id, {
-      attributes: ['result']
+      attributes: ['result', 'date']
     });
     models.sequelize.Promise.join(
       preds,
       result,
       function(preds, result) {
-        let hm_data = [],
-            sumprod = [0, 0],
-            total_preds = 0,
-            rs = [];
-        if (result.result) {
-          rs = result.result.split('-').map(x => x * 1);
-        }            
-        for (var i = preds.length - 1; i >= 0; i--) {
-          var goals = preds[i].prediction.split('-');
-          sumprod[0] += (preds[i].cnt * (goals[0] * 1));
-          sumprod[1] += (preds[i].cnt * (goals[1] * 1));
-          total_preds += preds[i].cnt;
-          hm_data.push([goals[0] * 1, goals[1] * 1, preds[i].cnt]);
-        };
-        res.send({
-          counts: hm_data,
-          mean: sumprod.map(x => parseFloat((x / total_preds).toFixed(2))),
-          result: rs
-        });
+        let then = moment(result.date).startOf('day').add(12, 'h');
+        if (moment().isAfter(then)) {
+          let hm_data = [],
+              sumprod = [0, 0],
+              total_preds = 0,
+              rs = [];
+          if (result && result.result) {
+            rs = result.result.split('-').map(x => x * 1);
+          }            
+          for (var i = preds.length - 1; i >= 0; i--) {
+            var goals = preds[i].prediction.split('-');
+            sumprod[0] += (preds[i].cnt * (goals[0] * 1));
+            sumprod[1] += (preds[i].cnt * (goals[1] * 1));
+            total_preds += preds[i].cnt;
+            hm_data.push([goals[0] * 1, goals[1] * 1, preds[i].cnt]);
+          };
+          res.send({
+            counts: hm_data,
+            mean: sumprod.map(x => parseFloat((x / total_preds).toFixed(2))),
+            result: rs
+          });
+        } else {
+          res.sendStatus(403);
+        }
+
       })
   }],
 
