@@ -171,7 +171,7 @@ module.exports = {
     res.render(folder + '/forgot');
   }],
 
-  get_payment: [utils.isAdmin, utils.isAjax, function(req, res) {
+  get_payment: [utils.isAdmin, function(req, res) {
     models.User.findAll({
       attributes: ['id', 'username', 'paid'],
       where: { validated: 1 }
