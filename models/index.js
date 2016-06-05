@@ -6,15 +6,6 @@ var Sequelize = require('sequelize'),
     sequelize = new Sequelize(conn.test, { logging: null }),
     db        = {};
 
-/*db['Team']        = sequelize.import('./teams.js');
-db['User']        = sequelize.import('./users.js');
-db['Match']       = sequelize.import('./matches.js');
-db['Venue']       = sequelize.import('./venues.js');
-db['Pred']        = sequelize.import('./predictions.js');
-db['League']      = sequelize.import('./leagues.js');
-db['League_User'] = sequelize.import('./league_user.js');
-db['Goal']        = sequelize.import('./goals.js');*/
-
 db.Team        = sequelize.import('./teams.js');
 db.User        = sequelize.import('./users.js');
 db.Match       = sequelize.import('./matches.js');
@@ -23,6 +14,7 @@ db.Pred        = sequelize.import('./predictions.js');
 db.League      = sequelize.import('./leagues.js');
 db.League_User = sequelize.import('./league_user.js');
 db.Goal        = sequelize.import('./goals.js');
+db.Tournament  = sequelize.import('./tournaments.js');
 
 // associations
 
@@ -61,7 +53,7 @@ db.Match.hasMany(db.Pred, { foreignKey: 'match_id' });
 db.Pred.belongsTo(db.Match, { foreignKey: 'match_id' });
 
 // match 1:n goal
-db.Match.hasMany(db.Goal);
+db.Match.hasMany(db.Goal, { foreignKey: 'match_id' });
 db.Goal.belongsTo(db.Match, { foreignKey: 'match_id' });
 
 // team 1:n goal
