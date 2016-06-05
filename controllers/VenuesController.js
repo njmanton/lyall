@@ -68,7 +68,7 @@ module.exports = {
             games.push({
               id: m.id,
               result: m.result || '-',
-              date: moment(m.date).format('ddd DD MMM, HH:mm'),
+              date: moment(m.date).format('ddd DD MMM, ha'),
               stage: m.stage,
               group: m.group,
               teama: {
