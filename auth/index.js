@@ -28,15 +28,24 @@ module.exports = function(app) {
           console.log('user not found');
           return done(null, false, { message: 'user not found' });
         }
-        if (!bCrypt.compareSync(password, user.password)) {
-          console.log('wrong password');
-          return done(null, false, { message: 'incorrect password' });
+        try {
+          if (!bCrypt.compareSync(password, user.password)) {
+            console.log('wrong password');
+            return done(null, false, { message: 'incorrect password' });
+          }
+        } catch(e) {
+          console.log(e);
+          return done(null, false, { message: 'problem with password' });
         }
         user.update({ resetpwd: null }); // nullify reset code, if present
         req.flash('success', 'logged in');
+        if (!user.paid) {
+          req.flash('error', 'You have not yet paid your entry fee');
+        }
         return done(null, user);
 
       }).error(function(err) {
+        console.log('e', err);
         return done(err);
       });
     }
@@ -73,6 +82,9 @@ module.exports = function(app) {
           }).then(function(user) {
             if (user) {
               req.flash('success', 'Logged in via Facebook');
+              if (!user.paid) {
+                req.flash('error', 'You have not yet paid your entry fee');
+              }
               user.update({ resetpwd: null });
               return done(null, user);
             } else {
@@ -120,6 +132,9 @@ module.exports = function(app) {
             if (user) {
               user.update({ resetpwd: null });
               req.flash('success', 'Logged in via Google');
+              if (!user.paid) {
+                req.flash('error', 'You have not yet paid your entry fee');
+              }
               return done(null, user);
             } else {
               return done(null, false, { message: 'Can\'t find matching Google+ user' });
