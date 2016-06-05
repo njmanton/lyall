@@ -11,12 +11,11 @@ var mail = {
   send: function(recipient, cc, subject, template_file, context, done) {
 
     // convert template and context into message
-    var message = '';
-    var template = fs.readFileSync(__dirname + '/templates/' + template_file + '.hbs', 'utf8');
-    message = hbs.compile(template);
+    let template = fs.readFileSync(__dirname + '/templates/' + template_file, 'utf8'),
+        message = hbs.compile(template);
 
     var data = {
-      from: 'admin@lcssl.org',
+      from: 'Euro Goalmine <euro.goalmine@lcssl.org>',
       to: recipient,
       subject: subject,
       text: message(context)
@@ -27,10 +26,10 @@ var mail = {
     }
 
     mailgun.messages().send(data).then(function(response) {
-      console.log('email sent'); // move to winston
+      console.log('email sent', response); // move to winston
       done(response);
     }, function(err) {
-      console.log('not sent', err); // move to winston
+      console.error('not sent', err); // move to winston
       done(err);
     });
 
