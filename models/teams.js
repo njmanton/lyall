@@ -67,7 +67,7 @@ module.exports = function(sequelize, DataTypes) {
                 gf: 0,
                 ga: 0,
                 pts: 0
-              }
+              };
             }
             if (!(away in group)) {
               group[away] = {
@@ -80,10 +80,10 @@ module.exports = function(sequelize, DataTypes) {
                 gf: 0,
                 ga: 0,
                 pts: 0
-              }
+              };
             }
             if (m.result) {
-              let goals = m.result.split('-').map(function(e) { return e * 1 });
+              let goals = m.result.split('-').map(function(e) { return e * 1; });
               group[home].pl++;
               group[away].pl++;
               group[home].gf += goals[0];
@@ -110,12 +110,10 @@ module.exports = function(sequelize, DataTypes) {
           for (var prop in group) {
             table.push(group[prop]);
           }
-          table.map(function(t) {
-            t.gd = t.gf - t.ga;
-          })
+          table.map(t => t.gd = t.gf - t.ga);
           return _.orderBy(table, ['pts', 'gd', 'gf'], ['desc', 'desc', 'desc']);
 
-        })
+        });
       }
     }
   }, {

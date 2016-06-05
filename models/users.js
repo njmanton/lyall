@@ -191,7 +191,7 @@ module.exports = function(sequelize, DataTypes) {
               pred.joker = m.predictions[0].joker;
               pred.pts = m.predictions[0].points;
             }
-            let then = moment(m.date).startOf('day');
+            let then = moment(m.date).startOf('day').add(12, 'h');
             pred.expired = moment().isAfter(then) || !!m.result;
             preds.push(pred);
           }
