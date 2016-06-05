@@ -28,18 +28,17 @@ module.exports = function(app) {
   app.get('/home', utils.isAuthenticated, function(req, res) {
     models.Pred.findAll({
       where: { user_id: req.user.id },
-      raw: true,
       include: {
         model: models.Match,
         attributes: ['id', 'date', 'result', 'group'],
         include: [{
           model: models.Team,
           as: 'TeamA',
-          attributes: ['id', 'name']
+          attributes: ['id', 'name', 'sname']
         }, {
           model: models.Team,
           as: 'TeamB',
-          attributes: ['id', 'name']
+          attributes: ['id', 'name', 'sname']
         }]
       }
     }).then(function(preds) {
@@ -50,12 +49,6 @@ module.exports = function(app) {
         home: true
       }); 
     });
-  });
-
-  app.get('/flash', function(req, res){
-    // Set a flash message by passing the key, followed by the value, to req.flash(). 
-    req.flash('info', 'Flash is back!');
-    res.redirect('/');
   });
 
   // login
