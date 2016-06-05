@@ -23,8 +23,8 @@
               <span class="pred">{{ this.pred }}</span>
               <input type="radio" name="joker_{{ @../key }}" disabled="disabled" {{#if this.joker }}checked{{/if }}>
             {{ else }}
-              <input class="score pred" type="text" value="{{ this.pred }}" data-mid="{{ this.mid }}">
-              <input type="radio" data-stage="{{ @../key }}" name="joker_{{ @../key }}" {{#if this.joker }}checked{{/if }} {{#unless this.pred}}disabled="disabled"{{/unless}} >
+              <input tabindex="{{ this.mid }}" class="score pred" type="text" value="{{ this.pred }}" data-mid="{{ this.mid }}">
+              <input type="radio" data-stage="{{ @../key }}" name="joker_{{ @../key }}" {{#if this.joker }}checked{{/if }} {{#if this.group_expired }}disabled="disabled"{{/if }} >
             {{/if }}
           </td>
           <td class="score">{{ this.result }}</td>
@@ -43,13 +43,16 @@
   $(document).ready(function() {
 
     $(':text').on('change', function() {
-      var pred = $(this);
+      var pred = $(this),
+          row = pred.closest('tr');
+      row.removeClass('ajaxChange');
       $.post('/predictions/update', {
         id: $('section').data('uid'),
         mid: pred.data('mid'),
         pred: pred.val()
       }).done(function(res) {
         pred.next().attr('disabled', false);
+        row.addClass('ajaxChange');
         console.log('done');
       })
     })

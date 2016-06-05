@@ -1,14 +1,18 @@
 <section class="row">
-  <h2>Reset your password</h2>
-  <p>You can now reset your password using the form below. Please enter the password associated with your account, and choose a new password (minimum 6 characters).</p>
-  <form action="" method="post" id="resetPassword">
-    <fieldset class="form-group">
-      <input type="email" placeholder="email" value="" required autocomplete="off" id="resetemail" name="email" /><br />
-      <input type="password" placeholder="new password (min 6 chars)" value="" pattern=".{6,}" required autocomplete="off" id="resetpwd" name="pwd" /><span id="password-val" class="intrainput"></span> <br />
-      <input type="password" placeholder="repeat password" required pattern=".{6,}" autocomplete="off" id="rpt" name="rpt" /><span id="rpt-val" class="intrainput"></span><br />
-      <input type="submit" id="reset-submit" disabled="disabled" class="btn btn-primary" value="Update" />      
-    </fieldset>
-  </form>
+  
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2>Reset your password</h2>
+    <p>You can now reset your password using the form below. Please enter the password associated with your account, and choose a new password (minimum 6 characters).</p>
+    <form action="" method="post" id="resetPassword">
+      <fieldset class="form-group">
+        <input type="email" placeholder="email" value="" required autocomplete="off" id="resetemail" name="email" /><br />
+        <input type="password" placeholder="new password (min 6 chars)" value="" pattern=".{6,}" required autocomplete="off" id="resetpwd" name="pwd" /><span id="password-val" class="intrainput"></span> <br />
+        <input type="password" placeholder="repeat password" required pattern=".{6,}" autocomplete="off" id="rpt" name="rpt" /><span id="rpt-val" class="intrainput"></span><br />
+        <input type="submit" id="reset-submit" disabled="disabled" class="btn btn-primary" value="Update" />      
+      </fieldset>
+    </form>    
+  </div>
+  
 </section>
 
 <script>

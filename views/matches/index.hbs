@@ -1,8 +1,8 @@
 <section class="row">
   
-  <div class="col-sm-10 col-md-9 col-md-offset-1">
+  <div class="col-sm-10 col-md-10 col-md-offset-1">
     {{#each matches }}
-    <table class="table table-sm">
+    <table class="f32 table table-sm">
       <caption>{{ groupPrefix @key }}</caption>
       <thead>
         <tr>
@@ -16,11 +16,11 @@
       <tbody>
         {{#each this }}
         <tr>
-          <td>{{ fdate }}</td>
+          <td><div style="max-height: 22px !important; overflow: hidden;">{{ fdate }}</div></td>
           <td class="hide-sm"><a href="/venues/{{ venue.id }}">{{ venue.city }}</a></td>
-          <td><a href="/teams/{{ TeamA.id }}">{{ TeamA.name }}</a></td>
+          <td class="flag {{ TeamA.sname }}"><a href="/teams/{{ TeamA.id }}">{{ TeamA.name }}</a></td>
           <td class="score">{{ result }}</td>
-          <td><a href="/teams/{{ TeamB.id }}">{{ TeamB.name }}</a></td>
+          <td class="flag {{ TeamB.sname }}"><a href="/teams/{{ TeamB.id }}">{{ TeamB.name }}</a></td>
           <td><a href="/matches/{{ id }}"><i title="View match" class="fa fa-search" aria-hidden="true"></i></a></td>
         </tr>
         {{/each }}

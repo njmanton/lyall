@@ -59,8 +59,8 @@
   </div>
 
   <div class="col-sm-10 col-md-5">
-    <h4>Goalmap <small>[<a href="#" data-toggle="popover" title="Goalmap" data-placement="bottom" data-content="This shows the distribution of predicted goals. 'Home' goals (first-named team) are on the x-axis. The darker the colour, the more predictions for that score. The red circle shows the actual match result. The green circle shows the weighted mean of all predictions.">?</a>]</small></h4> 
-    <div id="container" style="width: 400px; height: 400px; background-color: inherit; margin: 0 auto;"></div>
+    <h4>Goalmap <small>[<a href="#" data-toggle="popover" title="Goalmap" data-placement="bottom" data-content="This shows the distribution of predicted goals. 'Home' goals (first-named team) are on the x-axis. The darker the colour, the more predictions for that score. The red circle shows the match result. The green circle is the weighted mean of all predictions.">?</a>]</small></h4> 
+    <div id="container" style="width: 400px; height: 400px; background-color: inherit; margin: 0 auto;"><p class="nopreds">No predictions available</p></div>
   </div> 
 
 </section>
@@ -141,10 +141,12 @@
 
     }
     $.get('/matches/' + mid + '/heatmap').done(function(d) { 
-      cht.series[0].data = d.counts;
-      cht.series[1].data = [d.mean];
-      cht.series[2].data = [d.result];
-      $('#container').highcharts(cht);
+      if (d) {
+        cht.series[0].data = d.counts;
+        cht.series[1].data = [d.mean];
+        cht.series[2].data = [d.result];
+        $('#container').highcharts(cht);
+      }
     })
   })
 </script>
