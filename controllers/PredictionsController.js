@@ -5,14 +5,27 @@ var models  = require('../models'),
     folder  = 'predictions',
     utils   = require('../utils'),
     chalk   = require('chalk'),
-    moment  = require('moment'),
-    bp      = require('body-parser');
+    moment  = require('moment');
 
 module.exports = {
 
   get_index: [utils.isAuthenticated, function(req, res) {
     // requires logged-in user
     models.User.predictions(models, req.user.id).then(function(preds) {
+      //console.log(preds);
+      for (var group in preds) {
+        if (!preds.hasOwnProperty(group)) continue;
+        //console.log(preds[group].length);
+        var group_expired = false;
+        for (var x = 0; x < preds[group].length; x++) {
+          //console.log(preds[group][x]);
+          if (preds[group][x].expired && preds[group][x].joker) {
+            group_expired = true;
+          }
+          preds[group][x].group_expired = preds[group][x].expired || group_expired;
+        }
+      }
+      console.log(preds);
       res.render('players/predictions', {
         title: 'My Predictions',
         table: preds
@@ -25,7 +38,7 @@ module.exports = {
     // process new prediction
     // post format { id: <user id>, mid: <match id>, pred: <prediction> }
     models.Match.findById(req.body.id, { attributes: ['date'] }).then(function(match) {
-      let then = moment(match.date).startOf('day');
+      let then = moment(match.date).startOf('day').add(12, 'h');
       if (moment().isAfter(then) || match.result) {
         
         res.sendStatus(403);
@@ -76,7 +89,7 @@ module.exports = {
     });
     var group_expired = false;
     models.sequelize.Promise.each(preds, function(pred) {
-      let then = moment(pred.match.date).startOf('day');
+      let then = moment(pred.match.date).startOf('day').add(12, 'h');
       group_expired = group_expired || (moment().isAfter(then) && pred.joker == 1);
       if (!moment().isAfter(then) && !group_expired) {
         pred.update({
