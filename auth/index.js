@@ -89,7 +89,7 @@ module.exports = function(app) {
               return done(null, user);
             } else {
               req.flash('error', 'Can\'t find matching FB user');
-              return done(null, false, { message: 'Can\'t find matching FB user' });
+              return done(null, false, { message: 'Can\'t find matching FB user. Have you linked your account?' });
             }
           }).catch(function(e) {
             return done(e);
@@ -137,7 +137,7 @@ module.exports = function(app) {
               }
               return done(null, user);
             } else {
-              return done(null, false, { message: 'Can\'t find matching Google+ user' });
+              return done(null, false, { message: 'Can\'t find matching Google+ user. Have you linked your account?' });
             }
           }).catch(function(e) {
             return done(e);
