@@ -34,7 +34,11 @@
 
   <div class="col-sm-10 col-md-5">
     {{#unless preds }}
-    <p class="nopreds">You haven't made any predictions yet. Get <a href="/predictions">started</a> here.</p>
+      {{#if user }}
+      <p class="nopreds">You haven't made any predictions yet. Get <a href="/predictions">started</a> here.</p>
+      {{ else }}
+      <p class="nopreds">No predictions yet</p>
+      {{/if }}
     {{ else }}
     <table class="table table-sm f32">
       <caption>Predictions</caption>
