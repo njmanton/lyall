@@ -74,12 +74,12 @@
       }) 
     })
 
-    $.get('/users/missing').done(function(missing) {
+    /*$.get('/users/missing').done(function(missing) {
       $.each(missing, function(k, v) {
         var grp = (v.stage <= 'G') ? 'Group ' + v.stage : v.stage;
         todo.append('<div><span>' + grp + ': </span><span>' + v.missing + ' prediction(s) to make</span></div>');
       })
-    })
+    })*/
 
   })
 </script>
