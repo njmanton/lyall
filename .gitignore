@@ -1,6 +1,6 @@
 node_modules
 test
-assets/img/stadia
+//assets/img/stadia
 assets/js/vendor
 assets/css/vendor
 config/db_config.js
