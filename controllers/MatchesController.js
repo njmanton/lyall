@@ -152,7 +152,7 @@ module.exports = {
       result,
       function(preds, result) {
         let then = moment(result.date).startOf('day').add(12, 'h');
-        if (moment().isAfter(then)) {
+        if (moment().isAfter(then) || id < 37) {
           let hm_data = [],
               sumprod = [0, 0],
               total_preds = 0,
