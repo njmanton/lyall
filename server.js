@@ -13,6 +13,7 @@ var express         = require('express'),
     pkg             = require('./package.json'),
     bp              = require('body-parser'),
     expressSession  = require('express-session'),
+    os              = require('os'),
     excon           = require('express-controller'),
     flash           = require('connect-flash'),
     router          = express.Router(),
@@ -54,6 +55,7 @@ app.use((req, res, next) => {
   res.locals.flash_success = req.flash('success');
   res.locals.flash_error = req.flash('error');
   res.locals.flash_info = req.flash('info');
+  res.locals.prod = (os.hostname() == 'goalmine-euro-2016'); // true if prod server
   next();
 });
 
