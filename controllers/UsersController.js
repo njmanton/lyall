@@ -24,7 +24,9 @@ module.exports = {
   },
 
   get_id: function(req, res, id) {
-    var user = models.User.findById(id);
+    var user = models.User.findOne({
+      where: [{ validated: 1 }, { id: id }]
+    });
     var preds = models.Pred.findAll({
       where: { user_id: id },
       //raw: true,
