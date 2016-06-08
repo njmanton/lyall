@@ -46,7 +46,7 @@ module.exports = function(sequelize, DataTypes) {
           P.points,
           U.username,
           U.id AS uid
-          FROM PREDICTIONS P
+          FROM predictions P
           LEFT JOIN users U ON P.user_id = U.id
           LEFT JOIN league_user LU ON U.id = LU.user_id
           LEFT JOIN matches M ON P.match_id = M.id
