@@ -188,7 +188,7 @@ module.exports = function(sequelize, DataTypes) {
             if (m.predictions[0]) {
               pred.pid = m.predictions[0].id;
               pred.pred = m.predictions[0].prediction;
-              pred.joker = m.predictions[0].joker;
+              pred.joker = m.predictions[0].joker || (m.id == 51);
               pred.pts = m.predictions[0].points;
             }
             let then = moment(m.date).startOf('day').add(12, 'h');
