@@ -33,7 +33,7 @@ module.exports = {
     // receives prediction made via ajax
     // process new prediction
     // post format { id: <user id>, mid: <match id>, pred: <prediction> }
-    models.Match.findById(req.body.id, { attributes: ['date'] }).then(function(match) {
+    models.Match.findById(req.body.mid, { attributes: ['date'] }).then(function(match) {
       let then = moment(match.date).startOf('day').add(12, 'h');
       if (moment().isAfter(then) || match.result) {
         
