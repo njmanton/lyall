@@ -91,6 +91,12 @@ tr.selected td, tr.selected th {
   max-height: 22px;
   overflow: hidden; }
 
+.scorers {
+  font-size: 0.9rem;
+  text-align: right; }
+  .scorers p {
+    margin: 0; }
+
 @keyframes fin {
   from {
     background-color: #7f7; }
@@ -126,6 +132,16 @@ input.pred {
   border-style: none;
   color: #222; }
 
+#addGoal input, #addGoal select {
+  padding-left: 0.3rem;
+  display: inline;
+  height: 38px;
+  border-radius: 0.25rem;
+  border-style: none;
+  margin: 2px; }
+  #addGoal input[name='time'], #addGoal input[name='tao'], #addGoal select[name='time'], #addGoal select[name='tao'] {
+    width: 3rem; }
+
 #forgotPassword input,
 #resetPassword input,
 #confirmAccount input,
@@ -133,9 +149,6 @@ input.pred {
   padding-left: 0.3rem;
   display: inline-block;
   height: 38px;
-  border-radius: 0.25rem;
-  border-style: none;
-  margin: 2px;
   width: 40%; }
 
 #sendInvite input:not([type='checkbox']),

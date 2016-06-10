@@ -204,6 +204,43 @@ module.exports = {
         res.redirect('/matches/' + id);        
       })
     })
-  }]
+  }],
+
+  get_id_goals: [utils.isAdmin, function(req, res, id) {
+    models.Match.findById(id, {
+      where: { result: { ne: null } },
+      attributes: [
+        'id', 
+        'result',
+        'date', 
+      ],
+      include: [{
+        model: models.Team,
+        as: 'TeamA',
+        attributes: ['id', 'name', 'sname']
+      }, {
+        model: models.Team,
+        as: 'TeamB',
+        attributes: ['id', 'name', 'sname']
+      }, {
+        model: models.Goal,
+        attributes: ['id', 'team_id', 'scorer', 'type', 'time', 'tao'],
+        include: {
+          model: models.Team,
+          attributes: ['id', 'name']
+        }
+      }]
+    }).then(match => {
+      if (match.result) {
+        res.render(folder + '/goals', {
+          title: 'Goals',
+          match: match
+        })
+      } else {
+        res.status(404).render('errors/404');
+      }
+    })
+
+  }],
 
 };

@@ -116,6 +116,14 @@ tr.selected td, tr.selected th {
   overflow: hidden;
 }
 
+.scorers {
+  font-size: 0.9rem;
+  text-align: right;
+  p {
+    margin: 0;
+  }
+}
+
 @keyframes fin {
   from {background-color: #7f7;}
   to {background-color: #e8e8e8;}
