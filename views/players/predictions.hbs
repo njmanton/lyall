@@ -23,7 +23,7 @@
               <span class="pred">{{ this.pred }}</span>
               <input type="radio" name="joker_{{ @../key }}" disabled="disabled" {{#if this.joker }}checked{{/if }}>
             {{ else }}
-              <input tabindex="{{ this.mid }}" class="score pred" type="text" value="{{ this.pred }}" data-mid="{{ this.mid }}">
+              <input placeholder="X-X" pattern="\d{1,2}-\d{1,2}" maxlength="5" tabindex="{{ this.mid }}" class="score pred" type="text" value="{{ this.pred }}" data-mid="{{ this.mid }}">
               <input type="radio" data-stage="{{ @../key }}" name="joker_{{ @../key }}" {{#if this.joker }}checked{{/if }} {{#if this.group_expired }}disabled="disabled"{{/if }} >
             {{/if }}
           </td>
