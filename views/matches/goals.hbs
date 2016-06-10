@@ -1,0 +1,90 @@
+<section class="row">
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h3>{{ match.TeamA.name }} vs {{ match.TeamB.name }}</h3>
+    
+    {{#if match.goals }}
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Team</th>
+          <th>Time</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each match.goals }}
+        <tr>
+          <td>{{ scorer }}</td>
+          <td>{{ team.name }}</td>
+          <td>
+            {{ time }}'{{#if type }}({{ type }}){{/if }}{{#if tao }} + {{ tao }}'{{/if }}
+          </td>
+          <td><button class="btn btn-danger btn-sm" title="delete" data-gid="{{ id }}"><span class="fa fa-close"></span></button></td>
+        </tr>
+      {{/each }}
+      <tbody>
+    </table>
+    {{/if }}
+    <h5>Add goal</h5>
+    <form action="/goals/add" id="addGoal" method="post">
+      <fieldset class="form-group">
+        <input type="text" name="scorer" required="required" placeholder="scorer" />
+        <select name="team" id="">
+          <option value=""></option>
+          <option value="{{ match.TeamA.id }}">{{ match.TeamA.name }}</option>
+          <option value="{{ match.TeamB.id }}">{{ match.TeamB.name }}</option>
+        </select>
+        <input type="text" id="time" name="time" required="" placeholder="time" />
+        <input type="text" name="tao" disabled="disabled" placeholder="tao" />
+        <select name="type" id="">
+          <option value=""></option>
+          <option value="P">Pen</option>
+          <option value="O">Own goal</option>
+        </select>   
+        <input type="hidden" value="{{ match.id }}" name="match_id" />     
+      </fieldset>
+
+      <input type="submit" id="submit" class="btn btn-primary btn-sm" value="Submit" />     
+    </form>
+    
+    
+  </div>
+
+</section>
+
+<script>
+  $(document).ready(function() {
+    $('button').on('click', function() {
+      var gid = $(this).data('gid'),
+          row = $(this).closest('tr');
+      $.ajax({
+        url: '/goals/' + gid,
+        type: 'delete'
+      }).done(function(r) {
+        console.log(r);
+        if (r) {
+          row.fadeOut(500, function() { row.remove(); });
+        } else {
+          console.log('couldn\'t delete record');
+        }
+      })
+    })
+
+    var times = $('#time');
+
+    times.on('blur', function() {
+      var n = times.next();
+      console.log(n);
+      if (times.val() == 45 || times.val() == 90) {
+        n.attr('disabled', null);
+      } else {
+        n.attr('disabled', 'disabled');
+      }
+    });
+
+    $('#submit').on('click', function() {
+
+    })
+  })
+</script>

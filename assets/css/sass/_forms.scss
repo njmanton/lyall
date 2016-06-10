@@ -18,6 +18,19 @@ input.pred {
   color: #222;
 }
 
+#addGoal input, #addGoal select {
+  padding-left: 0.3rem;
+  display: inline;
+  height: 38px;
+  border-radius: 0.25rem;
+  border-style: none;
+  margin: 2px;
+  &[name='time'], &[name='tao'] {
+    width: 3rem;
+  }
+}
+
+
 #forgotPassword input, 
 #resetPassword input, 
 #confirmAccount input,
@@ -25,9 +38,7 @@ input.pred {
   padding-left: 0.3rem;
   display: inline-block;
   height:38px;
-  border-radius: 0.25rem;
-  border-style: none;
-  margin: 2px;
+
   width: 40%;
 }
 
