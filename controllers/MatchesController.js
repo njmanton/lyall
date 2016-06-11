@@ -162,10 +162,12 @@ module.exports = {
           }            
           for (var i = preds.length - 1; i >= 0; i--) {
             var goals = preds[i].prediction.split('-');
-            sumprod[0] += (preds[i].cnt * (goals[0] * 1));
-            sumprod[1] += (preds[i].cnt * (goals[1] * 1));
-            total_preds += preds[i].cnt;
-            hm_data.push([goals[0] * 1, goals[1] * 1, preds[i].cnt]);
+            if (goals.length == 2) {
+              sumprod[0] += (preds[i].cnt * (goals[0] * 1));
+              sumprod[1] += (preds[i].cnt * (goals[1] * 1));
+              total_preds += preds[i].cnt;
+              hm_data.push([goals[0] * 1, goals[1] * 1, preds[i].cnt]);              
+            }
           };
           res.send({
             counts: hm_data,
