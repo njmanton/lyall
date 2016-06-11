@@ -2,6 +2,7 @@
 'use strict';
 
 var models  = require('../models'),
+    folder  = 'goals',
     utils   = require('../utils');
 
 module.exports = {
@@ -37,8 +38,22 @@ module.exports = {
         res.redirect(req.headers.referer);
       })      
     }
-
     
-  }]
+  }],
+
+  get_index: function(req, res) {
+    models.Goal.findAll({
+      attributes: ['id', 'scorer', 'time', 'tao', 'type', 'match_id'],
+      include: {
+        model: models.Team,
+        attributes: ['id', 'name', 'sname']
+      }
+    }).then(goals => {
+      res.render(folder + '/index', {
+        title: 'Goals',
+        goals: goals
+      })
+    })
+  }
 
 }
