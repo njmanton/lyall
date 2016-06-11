@@ -45,17 +45,25 @@
     $(':text').on('change', function() {
       var pred = $(this),
           row = pred.closest('tr');
-      row.removeClass('ajaxChange');
-      $.post('/predictions/update', {
-        id: $('section').data('uid'),
-        mid: pred.data('mid'),
-        pred: pred.val()
-      }).done(function(res) {
-        pred.next().attr('disabled', false);
-        row.addClass('ajaxChange');
-        console.log('done');
-      })
-    })
+      row.removeClass('ajaxChange ajaxError');
+      var re = /\b\d{1,2}-\d{1,2}\b/;
+      if (pred.val().match(re) || pred.val() == '') {
+        $.post('/predictions/update', {
+          id: $('section').data('uid'),
+          mid: pred.data('mid'),
+          pred: pred.val()
+        }).done(function(res) {
+          row.addClass('ajaxChange');
+        }).fail(function(err) {
+          row.addClass('ajaxError');
+          pred.val('');
+        })
+      } else {
+        row.addClass('ajaxError');
+        pred.val('');
+      }
+    });
+ 
 
     $(':radio').on('change', function() {
       var radio = $(this);

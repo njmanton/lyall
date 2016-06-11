@@ -140,3 +140,20 @@ tr.selected td, tr.selected th {
   -webkit-animation-name: fin;
   -webkit-animation-duration: 3s;
 }
+
+@keyframes finerr {
+  from {background-color: #f77;}
+  to {background-color: #e8e8e8;}
+}
+
+@-webkit-keyframes finerr {
+  from {background-color: #f77;}
+  to {background-color: #e8e8e8;}
+}
+
+.ajaxError td {
+  animation-name: finerr;
+  animation-duration: 3s;
+  -webkit-animation-name: finerr;
+  -webkit-animation-duration: 3s;
+}

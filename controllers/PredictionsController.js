@@ -36,9 +36,9 @@ module.exports = {
     models.Match.findById(req.body.mid, { attributes: ['date'] }).then(function(match) {
       let then = moment(match.date).startOf('day').add(12, 'h');
       if (moment().isAfter(then) || match.result) {
-        
         res.sendStatus(403);
-
+      } else if (!req.body.pred.match(/\b\d{1,2}-\d{1,2}\b/)) {
+        res.sendStatus(400);
       } else {
 
         models.Pred.findOne({
