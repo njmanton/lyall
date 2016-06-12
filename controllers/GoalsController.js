@@ -54,6 +54,59 @@ module.exports = {
         goals: goals
       })
     })
-  }
+  },
+
+  get_times: [utils.isAjax, function(req, res) {
+    models.Goal.findAll({
+      attributes: ['id', 'scorer', 'time', 'type', 'tao', 'team_id'],
+      order: ['time', 'tao'],
+      include: {
+        model: models.Match,
+        attributes: ['id', 'date', 'result'],
+        include: [{
+          model: models.Team,
+          as: 'TeamA',
+          attributes: ['id', 'name']
+        }, {
+          model: models.Team,
+          as: 'TeamB',
+          attributes: ['id', 'name']
+        }]
+      }
+    }).then(goals => {
+      goals.map(g => { g.home = (g.team_id == g.match.TeamA.id) });
+      //res.send(goals);
+
+      var data = [], prev = null, yaxis = 0.9;
+      for (var x = 0; x < goals.length; x++) {
+        var g = goals[x],
+            color = null;
+        if (g.type == 'P') {
+          color = 'rgb(0, 0, 128)';
+        } else if (g.type == 'O') {
+          color = 'rgb(0, 128, 0)';
+        } else {
+          color = null;
+        }
+        if ((g.time + g.tao) == prev) {
+          yaxis += 0.1;
+        } else {
+          yaxis = 0.9
+        }
+        data.push({
+          x: (g.time + g.tao),
+          y: yaxis,
+          match: g.match.id,
+          color: color,
+          scorer: g.scorer,
+          team: g.home ? g.match.TeamA.name : g.match.TeamB.name,
+          oppo: g.home ? g.match.TeamB.name : g.match.TeamA.name,
+          type: g.type
+        });
+        prev = (g.time + g.tao);
+      }
+      res.send(data);
+    })
+  }]
 
 }
