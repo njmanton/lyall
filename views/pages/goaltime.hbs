@@ -15,8 +15,6 @@
 <script>
 	$(function() {
 
-		var goals = [];
-
 		$.get('/goals/times').done(function(res) {
 		  $('#hc').highcharts({
 				chart: {

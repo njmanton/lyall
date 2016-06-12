@@ -17,7 +17,11 @@
       <tbody>
         {{#each this }}
         <tr>
-          <td class="flag {{ this.teama.sname }}"><a href="/teams/{{ this.teama.id }}">{{ this.teama.name }}</a></td>
+          <td>
+            <div class="flag {{ this.teama.sname }}">
+              <a href="/teams/{{ this.teama.id }}">{{ this.teama.name }}</a>
+            </div>
+          </td>
           <td class="pred">
             {{#if this.expired }}
               <span class="pred">{{ this.pred }}</span>
@@ -28,7 +32,11 @@
             {{/if }}
           </td>
           <td class="score">{{ this.result }}</td>
-          <td class="flag {{ this.teamb.sname }}"><a href="/teams/{{ this.teamb.id }}">{{ this.teamb.name }}</a></td>
+          <td>
+            <div class="flag {{ this.teamb.sname }}">
+              <a href="/teams/{{ this.teamb.id }}">{{ this.teamb.name }}</a>
+            </div>
+          </td>
         </tr>
         {{/each }}
       </tbody>

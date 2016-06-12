@@ -111,9 +111,12 @@ tr.selected td, tr.selected th {
   padding: 5px 0;
 }
 
-.f32 tr td {
-  max-height: 22px;
+.f32 div.flag {
+  //max-height: 22px;
+  height: 28px;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .scorers {

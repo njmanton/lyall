@@ -12,10 +12,10 @@
   background-color: yellow; }
 
 .pts-5, .pts-10 {
-  background-color: #66ff66; }
+  background-color: #6f6; }
 
 .pts--1 {
-  background-color: #cc9999; }
+  background-color: #c99; }
 
 .joker {
   background-image: url(../img/joker_icon.png);
@@ -33,7 +33,7 @@
     text-align: center; }
   .result .team {
     width: 20rem;
-    background-color: #444444;
+    background-color: #444;
     text-align: center; }
     .result .team a {
       display: block;
@@ -46,7 +46,7 @@
       background-color: #5e5e5e; }
   .result .goal {
     width: 5rem;
-    background-color: #666666;
+    background-color: #666;
     color: #eee;
     text-align: center; }
   .result .flag {
@@ -87,9 +87,11 @@ tr.selected td, tr.selected th {
   min-width: 12rem;
   padding: 5px 0; }
 
-.f32 tr td {
-  max-height: 22px;
-  overflow: hidden; }
+.f32 div.flag {
+  height: 28px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; }
 
 .scorers {
   font-size: 0.9rem;
@@ -100,15 +102,15 @@ tr.selected td, tr.selected th {
 @keyframes fin {
   from {
     background-color: #7f7; }
-
   to {
     background-color: #e8e8e8; } }
+
 @-webkit-keyframes fin {
   from {
     background-color: #7f7; }
-
   to {
     background-color: #e8e8e8; } }
+
 .ajaxChange td {
   animation-name: fin;
   animation-duration: 3s;
@@ -118,15 +120,15 @@ tr.selected td, tr.selected th {
 @keyframes finerr {
   from {
     background-color: #f77; }
-
   to {
     background-color: #e8e8e8; } }
+
 @-webkit-keyframes finerr {
   from {
     background-color: #f77; }
-
   to {
     background-color: #e8e8e8; } }
+
 .ajaxError td {
   animation-name: finerr;
   animation-duration: 3s;
@@ -193,16 +195,17 @@ input.pred {
 
 html a {
   color: #0275d8; }
+
 html a:hover {
   color: #013e73;
   text-decoration: none; }
 
 body {
   font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
-  background-color: #333333; }
+  background-color: #333; }
 
 header {
-  background-color: #333333;
+  background-color: #333;
   padding: 0.25rem; }
   header a {
     color: #eee; }
@@ -243,7 +246,7 @@ h4 {
 
 section {
   background-color: #e8e8e8;
-  color: #333333; }
+  color: #333; }
 
 .container-fluid {
   padding-left: 0;
@@ -286,9 +289,9 @@ button.decision {
 #invites span {
   margin-right: 0.75rem; }
   #invites span.fa-check {
-    color: #66dd66; }
+    color: #6d6; }
   #invites span.fa-pause {
-    color: #6666dd; }
+    color: #66d; }
 
 .flash {
   position: absolute;
@@ -311,13 +314,13 @@ button.decision {
   font-size: 1.3rem; }
 
 .flash .success {
-  background-color: #66dd66; }
+  background-color: #6d6; }
 
 .flash .error {
-  background-color: #dd6666; }
+  background-color: #d66; }
 
 .flash .info {
-  background-color: #6666dd; }
+  background-color: #66d; }
 
 .nopreds {
   font-size: 2.2rem;
@@ -329,6 +332,5 @@ button.decision {
 @media only screen and (max-width: 900px) {
   .hide-sm {
     display: none; }
-
   .f32 .flag {
     min-width: 8rem; } }
