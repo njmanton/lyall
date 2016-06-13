@@ -58,6 +58,10 @@
   width: 3rem;
   text-align: center; }
 
+.hc-hilite {
+  font-weight: bold;
+  background-color: #999; }
+
 td.pred {
   width: 4rem;
   min-width: 4rem !important; }

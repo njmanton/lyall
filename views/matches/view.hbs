@@ -142,6 +142,22 @@
       legend: {
         enabled: false
       },
+      plotOptions: {
+        series: {
+          point: {
+            events: {
+              mouseOver: function() {
+                var score = this.x + '-' + this.y;
+                $('td:contains("' + score + '")').prev().addClass('hc-hilite');
+              },
+              mouseOut: function() {
+                $('td').removeClass('hc-hilite');
+              }
+            }            
+          }
+
+        }
+      },
       series: [{
         name: 'Goals predicted',
         borderWidth: 1
