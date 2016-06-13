@@ -78,7 +78,7 @@ module.exports = {
             table: players,
             pending: pending,
             member: ~_.findIndex(players, { uid: uid }),
-            owner: (req.user && ((req.user == league.organiser) || req.user.admin))
+            owner: (req.user && ((req.user.id == league.organiser) || req.user.admin))
           });          
         } else {
           res.status(404).render('errors/404');
