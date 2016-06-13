@@ -196,5 +196,10 @@ button.decision {
   text-align: center;
   margin-top: 4rem;
 }
+
+.unpaid {
+  font-style: italic;
+  background-color: darken($sectionbg, 10%);
+}
 // last
 @import 'sass/_media';

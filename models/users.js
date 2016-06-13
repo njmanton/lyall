@@ -72,7 +72,7 @@ module.exports = function(sequelize, DataTypes) {
           attributes: ['id', 'prediction', 'joker', 'points'],
           include: [{
             model: models.User,
-            attributes: ['id', 'username'],
+            attributes: ['id', 'username', 'paid'],
           }, {
             model: models.Match,
             attributes: ['id', 'result', 'group', 'stage']
@@ -86,6 +86,7 @@ module.exports = function(sequelize, DataTypes) {
                 table[name] = {
                   rank: 0,
                   name: name,
+                  paid: preds[x].user.paid,
                   id: preds[x].user.id,
                   points: 0,
                   preds: 0,

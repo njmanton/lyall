@@ -16,7 +16,7 @@
       </thead>
       <tbody>
         {{#each table }}
-        <tr class="{{#if sel }}selected{{/if }}">
+        <tr class="{{#if sel }}selected{{/if }} {{#unless paid }}unpaid{{/unless }}  ">
           <th scope="row">{{ rank }}</td>
           <td><a href="/users/{{ id }}">{{ name }}</a></td>
           <td>{{ cs }}</td>
