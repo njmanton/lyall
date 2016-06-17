@@ -107,6 +107,25 @@ module.exports = {
       }
       res.send(data);
     })
-  }]
+  }],
+
+  get_cumulative: function(req, res) {
+    models.Match.findAll({
+      order: ['date'],
+      attributes: ['result'],
+      where: { result: { $ne: null } }
+    }).then(matches => {
+      let goals = [], sum = 0;
+      for (var x = 0; x < matches.length; x++) {
+        var g = matches[x].result.split('-').reduce((p, c) => { return p + (c * 1) }, 0);
+        sum += g;
+        goals.push(sum);
+      }
+      res.render(folder + '/cumulative', {
+        title: 'Cumulative goals scored',
+        goals: JSON.stringify(goals)
+      })
+    })
+  }
 
 }

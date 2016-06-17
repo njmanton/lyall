@@ -9,3 +9,4 @@ config/auth_config.js
 config/cfg.js
 *.sublime*
 TODO.md
+.DS_Store

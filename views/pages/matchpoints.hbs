@@ -1,0 +1,64 @@
+<section class="row">
+  <div class="col-sm-10 col-md-8 col-md-offset-2">
+    <h2>Points scored </h2>
+    <div id="hc_pbm"></div>
+  </div>
+</section>
+
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/highcharts-more.js"></script>
+<script>
+  $(function() {
+
+    $.get('/matches/points').done(function(pts) {
+      var n = pts.labels.length; console.log(n);
+      $('#hc_pbm').highcharts({
+        colors: ['#00db74', '#280661'],
+        chart: {
+          type: 'bar',
+          height: n * 60
+        },
+        title: {
+          text: null
+        },
+        xAxis: {
+          categories: pts.labels,
+          step: 1
+        },
+        yAxis: {
+          title: {
+            text: 'points'
+          },
+          min: -10
+        },
+        plotOptions: {
+          bar: {
+            animation: false,
+            grouping: false,
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
+        series: [{
+          name: 'points',
+          data: pts.points,
+          pointWidth: 30,
+          //pointPadding: 0.3,
+          point: {
+            events: {
+              click: function() {
+                window.location.href = '/matches/' + this.id;
+              }
+            }
+          }
+        }, {
+          name: 'jokers',
+          data: pts.jokers,
+          pointWidth: 12,
+          borderWidth: 0
+        }]
+      });
+    })
+  })
+</script>
