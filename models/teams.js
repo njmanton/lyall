@@ -60,6 +60,7 @@ module.exports = function(sequelize, DataTypes) {
               group[home] = {
                 id: m.TeamA.id,
                 name: m.TeamA.name,
+                flag: m.TeamA.sname,
                 pl: 0,
                 w: 0,
                 d: 0,
@@ -73,6 +74,7 @@ module.exports = function(sequelize, DataTypes) {
               group[away] = {
                 id: m.TeamB.id,
                 name: m.TeamB.name,
+                flag: m.TeamB.sname,
                 pl: 0,
                 w: 0,
                 d: 0,

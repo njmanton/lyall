@@ -4,7 +4,7 @@
     <h2>{{ team.name }}</h2>
     <img style="height: 6em;" src="/img/flags/{{ team.sname }}.svg" alt="{{ team.name }} Flag" />
     {{#each matches }}
-    <table class="table table-sm">
+    <table class="table table-sm f32">
       <caption>{{ groupPrefix @key }}</caption>
       <thead>
         <tr>
@@ -19,8 +19,19 @@
         {{#each this }}
         <tr>
           <td>{{ this.date }}</td>
-          <td><a href="/venues/{{ this.venue.id }}">{{ this.venue.stadium }}</a></td>
-          <td class="flag {{ this.opponent.flag }}"><a href="/teams/{{ this.opponent.id }}">{{ this.opponent.name }}</a></td>
+          <td>
+            <a href="/venues/{{ this.venue.id }}">{{ this.venue.stadium }}</a>
+          </td>          
+          {{#if this.opponent.flag }}
+          <td class="flag {{ this.opponent.flag }}">
+            <a href="/teams/{{ this.opponent.id }}">{{ this.opponent.name }}</a>
+          </td>          
+          {{ else }}
+          <td>
+            <span>{{ this.opponent.name }}</span>
+          </td>
+          {{/if }}
+
           <td>{{ this.result }}</td>
           <td><a href="/matches/{{ this.id }}"><i title="view game" class="fa fa-search" aria-hidden="true"></i></a></td>
         </tr>
@@ -29,7 +40,7 @@
     </table>
     {{/each }}
 
-    <table class="table table-sm">
+    <table class="f32 table table-sm">
       <caption>{{ groupPrefix team.group }} Table</caption>
       <thead>
         <tr>
@@ -47,7 +58,7 @@
       <tbody>
         {{#each table }}
         <tr class="{{#if sel }}selected{{/if }}">
-          <td><a href="/teams/{{ id }}">{{ name }}</a></td>
+          <td class="flag {{ flag }}"><a href="/teams/{{ id }}">{{ name }}</a></td>
           <td>{{ pl }}</td>
           <td>{{ w }}</td>
           <td>{{ d }}</td>

@@ -61,10 +61,17 @@ module.exports = {
           for (var x = 0; x < matches.length; x++) {
             var m = matches[x],
                 result = null,
-                home = (m.TeamA.id == id);
+                home = (m.TeamA && m.TeamA.id == id);
 
             if (m.result) {
               result = (home) ? m.result : m.result.split('-').reverse().join('-');
+            }
+
+            var oppo = {};
+            if (home) {
+              oppo = (m.TeamB) ? { id: m.TeamB.id, name: m.TeamB.name, flag: m.TeamB.sname } : { id: null, name: m.group.split('v')[1]};
+            } else {
+              oppo = (m.TeamA) ? { id: m.TeamA.id, name: m.TeamA.name, flag: m.TeamA.sname } : { id: null, name: m.group.split('v')[0]};
             }
 
             games.push({
@@ -72,11 +79,7 @@ module.exports = {
               date: moment(m.date).format('ddd DD MMM, HH:mm'),
               group: m.group,
               stage: m.stage,
-              opponent: {
-                id: (home) ? m.TeamB.id : m.TeamA.id,
-                name: (home) ? m.TeamB.name : m.TeamA.name,
-                flag: (home) ? m.TeamB.sname : m.TeamA.sname
-              },
+              opponent: oppo,
               result: result || '-',
               venue: {
                 id: m.venue.id,
