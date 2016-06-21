@@ -81,7 +81,7 @@ caption {
   display: table-cell; }
 
 tr.selected td, tr.selected th {
-  background-color: #b5b5b5; }
+  background-color: rgba(51, 196, 51, 0.5); }
 
 .f32 .flag > a {
   padding-left: 3em;
