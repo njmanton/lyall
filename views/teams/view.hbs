@@ -18,8 +18,8 @@
       <tbody>
         {{#each this }}
         <tr>
-          <td>{{ this.date }}</td>
-          <td>
+          <td><date>{{ this.date }}</date></td>
+          <td class="hide-sm">
             <a href="/venues/{{ this.venue.id }}">{{ this.venue.stadium }}</a>
           </td>          
           {{#if this.opponent.flag }}
