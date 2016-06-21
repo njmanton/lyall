@@ -76,7 +76,7 @@ module.exports = {
 
             games.push({
               id: m.id,
-              date: moment(m.date).format('ddd DD MMM, HH:mm'),
+              date: moment(m.date).format('DD MMM, HH:mm'),
               group: m.group,
               stage: m.stage,
               opponent: oppo,
