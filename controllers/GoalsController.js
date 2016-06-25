@@ -17,7 +17,7 @@ module.exports = {
   }],
 
   post_add: [utils.isAdmin, function(req, res) {
-    if (!req.body.scorer || !req.body.team || req.body.time < 1 || req.body.time > 90) {
+    if (!req.body.scorer || !req.body.team || req.body.time < 1 || req.body.time > 120) {
       req.flash('error', 'something wrong with that data');
       res.redirect(req.headers.referer);
     } else {
@@ -126,6 +126,31 @@ module.exports = {
         goals: JSON.stringify(goals)
       })
     })
+  },
+
+  get_density: function(req, res) {
+    models.Goal.findAll({
+      attributes: ['time', 'tao'],
+      order: 'time, tao ASC'
+    }).then(goals => {
+      var histo = [],
+          total = goals.length;
+      for (var y = 0; y < 100; y++) { histo[y] = 0 };
+      for (var x = 0; x < total; x++) {
+        var t = goals[x].time + goals[x].tao;
+        histo[t]++;
+      }
+      var result = [];
+      histo.reduce((a, b, i) => {
+        return result[i] = (a + b);
+      }, 0);
+      var out = result.map(i => { return i / total })
+      res.render(folder + '/density', {
+        title: 'goal density by time',
+        data: out
+      })
+    })
+
   }
 
 }
