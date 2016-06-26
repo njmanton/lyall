@@ -2,6 +2,7 @@
 'use strict';
 
 var models    = require('./models'),
+    moment    = require('moment'),
     mail      = require('./mail'),
     fs        = require('fs'),
     utils     = require('./utils'),
@@ -42,6 +43,10 @@ module.exports = function(app) {
         }]
       }
     }).then(function(preds) {
+      preds.map(p => {
+        let then = moment(p.match.date).startOf('day').add(12, 'h');
+        p.expired = (moment().isAfter(then) || (p.match.id < 37 ));
+      })
       res.render('players/view', {
         title: 'Goalmine | ' + req.user.username,
         data: req.user,
