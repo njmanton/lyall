@@ -54,7 +54,7 @@
         {{#each preds }}
         <tr>
           <td class="flag {{ match.TeamA.sname }}"><a href="/teams/{{ match.TeamA.id }}">{{ match.TeamA.name }}</a></td>
-          <td class="score pts-{{ points }} {{#if joker }}joker{{/if }}">{{ prediction }}</td>
+          <td class="score pts-{{ points }} {{#if joker }}joker{{/if }}">{{#unless expired }}?-?{{ else }}{{ prediction }}{{/unless }}</td>
           <td class="score">{{ match.result }}</td>
           <td class="flag {{ match.TeamB.sname }}"><a href="/teams/{{ match.TeamB.id }}">{{ match.TeamB.name }}</a></td>
         </tr>

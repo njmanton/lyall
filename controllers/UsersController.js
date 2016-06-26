@@ -48,6 +48,10 @@ module.exports = {
       user,
       preds,
       function(user, preds) {
+        preds.map(p => {
+          let then = moment(p.match.date).startOf('day').add(12, 'h');
+          p.expired = (moment().isAfter(then) || (p.match.id < 37 ));
+        })
         if (user) {
           res.render(folder + '/view', {
             title: 'Goalmine | ' + user.username,
