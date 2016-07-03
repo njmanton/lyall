@@ -26,19 +26,15 @@
       <tr>
         <td>&nbsp;</td>
         <td class="scorers">
-          {{#each match.goals }}
-            {{#if home }}
-            <p>{{ scorer }} {{ time }}'{{#if tao }}+{{tao }}'{{/if }}{{#if type }}({{ type }}){{/if }}</p>
-            {{/if}}
+          {{#each goals.home }}
+            <p>{{ @key }} {{ times }}</p>
           {{/each }}
         </td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td class="scorers">
-          {{#each match.goals }}
-            {{#unless home }}
-            <p>{{ scorer }} {{ time }}'{{#if tao }}+{{tao }}'{{/if }}{{#if type }}({{ type }}){{/if }}</p>
-            {{/unless }}
+          {{#each goals.away }}
+            <p>{{ @key }} {{ times }}</p>
           {{/each }}
         </td>
         <td>&nbsp;</td>

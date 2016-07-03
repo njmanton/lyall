@@ -93,10 +93,27 @@ module.exports = {
           match.tb = (match.TeamB) ? match.TeamB.name : placeholders[1];
           match.scores = (match.result) ? match.result.split('-') : ['-', '-'];
           match.fdate = moment(match.date).format('ddd DD/MM ha');
-          match.goals.map(m => { m.home = (match.TeamA.id == m.team_id) });
+          var goals = { home: {}, away: {} };
+          for (var x = 0; x < match.goals.length; x++) {
+            let goal = match.goals[x],
+                team = (match.TeamA.id == goal.team_id) ? 'home': 'away';
+            if (!(goal.scorer in goals[team])) {
+              goals[team][goal.scorer] = {
+                times: goal.time + (goal.tao || '' + "'")
+              }
+            } else {
+              goals[team][goal.scorer].times += (', ' + goal.time + (goal.tao || '') + "'");
+            }
+            if (goal.type == 'P') {
+              goals[team][goal.scorer].times += ' (p)';
+            } else if (goal.type == 'O') {
+              goals[team][goal.scorer].times += ' (o.g.)';
+            }
+          }
           res.render(folder + '/view', {
             title: `Goalmine |  ${match.ta} vs ${match.tb}`,
             match: match,
+            goals: goals,
             preds: preds,
             visible: (moment().isAfter(then) || cfg.ignoreExpiry || (match.id < 37 ))
           });          
