@@ -96,13 +96,14 @@ module.exports = {
           var goals = { home: {}, away: {} };
           for (var x = 0; x < match.goals.length; x++) {
             let goal = match.goals[x],
+                time = goal.time + ((goal.tao) ? ('+' + goal.tao) : '') + "'",
                 team = (match.TeamA.id == goal.team_id) ? 'home': 'away';
             if (!(goal.scorer in goals[team])) {
               goals[team][goal.scorer] = {
-                times: goal.time + (goal.tao || '' + "'")
+                times: time
               }
             } else {
-              goals[team][goal.scorer].times += (', ' + goal.time + (goal.tao || '') + "'");
+              goals[team][goal.scorer].times += (', ' + time);
             }
             if (goal.type == 'P') {
               goals[team][goal.scorer].times += ' (p)';
