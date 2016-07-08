@@ -44,7 +44,7 @@ module.exports = function(app) {
       }
     }).then(function(preds) {
       preds.map(p => {
-        let then = moment(p.match.date).startOf('day').add(12, 'h');
+        let then = moment(p.match.date).startOf('day').add(19, 'h');
         p.expired = (moment().isAfter(then) || (p.match.id < 37 ));
       })
       res.render('players/view', {

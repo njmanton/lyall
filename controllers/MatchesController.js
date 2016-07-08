@@ -88,7 +88,7 @@ module.exports = {
           if (match.stage.length > 1) {
             placeholders = match.group.split('v');
           }
-          let then = moment(match.date).startOf('day').add(12, 'h');
+          let then = moment(match.date).startOf('day').add(19, 'h');
           match.ta = (match.TeamA) ? match.TeamA.name : placeholders[0];
           match.tb = (match.TeamB) ? match.TeamB.name : placeholders[1];
           match.scores = (match.result) ? match.result.split('-') : ['-', '-'];
@@ -170,7 +170,7 @@ module.exports = {
       preds,
       result,
       function(preds, result) {
-        let then = moment(result.date).startOf('day').add(12, 'h');
+        let then = moment(result.date).startOf('day').add(19, 'h');
         if (moment().isAfter(then) || id < 37) {
           let hm_data = [],
               sumprod = [0, 0],

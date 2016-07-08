@@ -49,7 +49,7 @@ module.exports = {
       preds,
       function(user, preds) {
         preds.map(p => {
-          let then = moment(p.match.date).startOf('day').add(12, 'h');
+          let then = moment(p.match.date).startOf('day').add(19, 'h');
           p.expired = (moment().isAfter(then) || (p.match.id < 37 ));
         })
         if (user) {

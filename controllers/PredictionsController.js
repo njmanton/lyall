@@ -34,7 +34,7 @@ module.exports = {
     // process new prediction
     // post format { id: <user id>, mid: <match id>, pred: <prediction> }
     models.Match.findById(req.body.mid, { attributes: ['date'] }).then(function(match) {
-      let then = moment(match.date).startOf('day').add(12, 'h');
+      let then = moment(match.date).startOf('day').add(19, 'h');
       if (moment().isAfter(then) || match.result) {
         res.sendStatus(403);
       } else if (!req.body.pred.match(/\b\d{1,2}-\d{1,2}\b/)) {
@@ -51,7 +51,8 @@ module.exports = {
             models.Pred.create({
               user_id: req.body.id,
               match_id: req.body.mid,
-              prediction: req.body.pred
+              prediction: req.body.pred,
+              joker: 1
             }).then(function() { res.send('create'); });
           }
 
@@ -85,7 +86,7 @@ module.exports = {
     });
     var group_expired = false;
     models.sequelize.Promise.each(preds, function(pred) {
-      let then = moment(pred.match.date).startOf('day').add(12, 'h');
+      let then = moment(pred.match.date).startOf('day').add(19, 'h');
       group_expired = group_expired || (moment().isAfter(then) && pred.joker == 1);
       if (!moment().isAfter(then) && !group_expired) {
         pred.update({
